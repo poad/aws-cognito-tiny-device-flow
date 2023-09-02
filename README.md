@@ -1,1 +1,1 @@
-# aws-tiny-device-flow
+# aws-cognito-tiny-device-flow

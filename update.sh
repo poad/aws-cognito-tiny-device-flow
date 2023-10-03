@@ -31,7 +31,7 @@ if [ $result -ne 0 ]; then
   exit $result
 fi
 
-if ! git pull --prune && git commit -am "Bumps node modules" && git push; then
+if ! (git pull --prune && git commit -am "Bumps node modules" && git push); then
   cd "${CUR}" || exit
   exit $result
 fi

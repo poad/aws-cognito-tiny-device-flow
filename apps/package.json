@@ -37,8 +37,8 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@aws-cdk/aws-apigatewayv2-alpha": "2.94.0-alpha.0",
-    "@aws-cdk/aws-apigatewayv2-integrations-alpha": "2.94.0-alpha.0",
+    "@aws-cdk/aws-apigatewayv2-alpha": "2.99.1-alpha.0",
+    "@aws-cdk/aws-apigatewayv2-integrations-alpha": "2.99.1-alpha.0",
     "@aws-sdk/client-cognito-identity-provider": "^3.409.0",
     "@aws-sdk/client-dynamodb": "^3.409.0",
     "@aws-sdk/client-s3": "^3.409.0",

@@ -3,10 +3,10 @@ import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Stream } from 'stream';
 
 interface Environments {
-    bucketName: string,
-    region: string,
-    domain: string,
-    pathPrefix: string,
+  bucketName: string;
+  region: string;
+  domain: string;
+  pathPrefix: string;
 }
 
 const environments: Environments = {
@@ -16,31 +16,40 @@ const environments: Environments = {
   pathPrefix: process.env.PATH_PREFIX!,
 };
 
-const downloadObject = async (s3: S3Client, path: string): Promise<{
-    statusCode: number,
-    contentType: string,
-    body?: string
-} | undefined> => {
+const downloadObject = async (
+  s3: S3Client,
+  path: string
+): Promise<
+  | {
+      statusCode: number;
+      contentType: string;
+      body?: string;
+    }
+  | undefined
+> => {
   const key = `${environments.pathPrefix}/${path}`;
 
   // console.log(`s3 key: ${key}`);
 
-  const resp = await s3.send(new GetObjectCommand({
-    Bucket: environments.bucketName,
-    Key: key,
-  }));
+  const resp = await s3.send(
+    new GetObjectCommand({
+      Bucket: environments.bucketName,
+      Key: key,
+    })
+  );
   if (resp.Body === undefined) {
     // eslint-disable-next-line no-console
     console.warn('not found');
 
     return undefined;
   }
-  const streamToString = (stream: Stream): Promise<string> => new Promise((resolve, reject) => {
-    const chunks: Uint8Array[] = [];
-    stream.on('data', (chunk: Uint8Array) => chunks.push(chunk));
-    stream.on('error', reject);
-    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-  });
+  const streamToString = (stream: Stream): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const chunks: Uint8Array[] = [];
+      stream.on('data', (chunk: Uint8Array) => chunks.push(chunk));
+      stream.on('error', reject);
+      stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+    });
 
   return {
     statusCode: 200,
@@ -57,7 +66,9 @@ const MIME_TYPES = {
 };
 
 const mimeType = (path: string | undefined, s3Mime: string): string => {
-  const resolved = Object.entries(MIME_TYPES).find((entry) => (path?.endsWith(entry[0]) ? entry : undefined));
+  const resolved = Object.entries(MIME_TYPES).find((entry) =>
+    path?.endsWith(entry[0]) ? entry : undefined
+  );
 
   // console.log(resolved ? resolved[1] : s3Mime);
 
@@ -65,7 +76,7 @@ const mimeType = (path: string | undefined, s3Mime: string): string => {
 };
 
 export const handler = async (
-  event: APIGatewayProxyEventV2,
+  event: APIGatewayProxyEventV2
 ): Promise<APIGatewayProxyResultV2> => {
   // console.log(JSON.stringify(event));
 
@@ -74,18 +85,23 @@ export const handler = async (
 
   const s3 = new S3Client({});
 
-  const content = proxy !== undefined && proxy !== '' ? await downloadObject(s3, proxy) : undefined;
+  const content =
+    proxy !== undefined && proxy !== ''
+      ? await downloadObject(s3, proxy)
+      : undefined;
   const notFound = await downloadObject(s3, 'index.html');
 
-  return content !== undefined ? {
-    statusCode: 200,
-    headers: { 'Content-Type': mimeType(proxy, content?.contentType!) },
-    body: content?.body,
-  } : {
-    statusCode: 404,
-    headers: { 'Content-Type': notFound?.contentType! },
-    body: notFound?.body,
-  };
+  return content !== undefined
+    ? {
+        statusCode: 200,
+        headers: { 'Content-Type': mimeType(proxy, content?.contentType!) },
+        body: content?.body,
+      }
+    : {
+        statusCode: 404,
+        headers: { 'Content-Type': notFound?.contentType! },
+        body: notFound?.body,
+      };
 };
 
 export default handler;

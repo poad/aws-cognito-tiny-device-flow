@@ -4,19 +4,18 @@ import { marshall } from '@aws-sdk/util-dynamodb';
 import { URLSearchParams } from 'url';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Stream } from 'stream';
-import fetch from 'node-fetch';
 import { DeviceCodeTable, ErrorResponse } from '../types';
 
 interface Environments {
-    bucketName: string,
-    region: string,
-    table: string,
-    domain: string,
-    clientId: string,
-    redirectUri: string,
-    retryUri: string,
-    pathPrefix: string,
-    responseType: string,
+  bucketName: string;
+  region: string;
+  table: string;
+  domain: string;
+  clientId: string;
+  redirectUri: string;
+  retryUri: string;
+  pathPrefix: string;
+  responseType: string;
 }
 
 const environments: Environments = {
@@ -32,16 +31,16 @@ const environments: Environments = {
 };
 
 const authorize = async (param: {
-    domain: string,
-    clientId: string,
-    redirectUri: string,
-    code: string,
+  domain: string;
+  clientId: string;
+  redirectUri: string;
+  code: string;
 }): Promise<{
-    idToken: string,
-    accessToken: string,
-    refreshToken: string,
-    expiresIn: number,
-    tokenType: string,
+  idToken: string;
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+  tokenType: string;
 }> => {
   const body = Object.entries({
     grant_type: 'authorization_code',
@@ -49,8 +48,8 @@ const authorize = async (param: {
     redirect_uri: encodeURIComponent(param.redirectUri),
     code: encodeURIComponent(param.code),
   } as {
-        [key: string]: string
-    })
+    [key: string]: string;
+  })
     .map(([key, value]) => `${encodeURIComponent(key)}=${value}`)
     .reduce((cur, acc) => `${acc}&${cur}`);
 
@@ -66,12 +65,12 @@ const authorize = async (param: {
   });
 
   /* eslint-disable camelcase */
-  const json = await resp.json() as {
-    access_token: string,
-    refresh_token: string,
-    id_token: string,
-    token_type: string,
-    expires_in: number
+  const json = (await resp.json()) as {
+    access_token: string;
+    refresh_token: string;
+    id_token: string;
+    token_type: string;
+    expires_in: number;
   };
   /* eslint-enable camelcase */
 
@@ -86,30 +85,39 @@ const authorize = async (param: {
   /* eslint-enable camelcase */
 };
 
-const downloadObject = async (s3: S3Client, path: string): Promise<{
-    statusCode: number,
-    contentType: string,
-    body?: string
-} | undefined> => {
+const downloadObject = async (
+  s3: S3Client,
+  path: string
+): Promise<
+  | {
+      statusCode: number;
+      contentType: string;
+      body?: string;
+    }
+  | undefined
+> => {
   const key = `${environments.pathPrefix}/${path}`;
 
   // console.log(`s3 key: ${key}`);
-  const resp = await s3.send(new GetObjectCommand({
-    Bucket: environments.bucketName,
-    Key: key,
-  }));
+  const resp = await s3.send(
+    new GetObjectCommand({
+      Bucket: environments.bucketName,
+      Key: key,
+    })
+  );
   if (resp.Body === undefined) {
     // eslint-disable-next-line no-console
     console.warn('not found');
 
     return undefined;
   }
-  const streamToString = (stream: Stream): Promise<string> => new Promise((resolve, reject) => {
-    const chunks: Uint8Array[] = [];
-    stream.on('data', (chunk: Uint8Array) => chunks.push(chunk));
-    stream.on('error', reject);
-    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-  });
+  const streamToString = (stream: Stream): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const chunks: Uint8Array[] = [];
+      stream.on('data', (chunk: Uint8Array) => chunks.push(chunk));
+      stream.on('error', reject);
+      stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+    });
 
   return {
     statusCode: 200,
@@ -119,7 +127,7 @@ const downloadObject = async (s3: S3Client, path: string): Promise<{
 };
 
 export const handler = async (
-  event: APIGatewayProxyEventV2,
+  event: APIGatewayProxyEventV2
 ): Promise<APIGatewayProxyResultV2> => {
   // console.log(JSON.stringify(event));
 
@@ -133,28 +141,37 @@ export const handler = async (
   }
   const s3 = new S3Client({});
 
-  const state = event.queryStringParameters?.state ? Array.from(
-    new URLSearchParams(
-      Buffer.from(event.queryStringParameters?.state, 'base64').toString(),
-    ),
-  ).map((entry) => {
-    const entity: { [key: string]: string } = {};
-    const key = entry[0];
-    entity[key] = entry[1];
-    return entity;
-  }).reduce((cur, acc) => Object.assign(acc, cur)) as {
+  const state = event.queryStringParameters?.state
+    ? (Array.from(
+        new URLSearchParams(
+          Buffer.from(event.queryStringParameters?.state, 'base64').toString()
+        )
+      )
+        .map((entry) => {
+          const entity: { [key: string]: string } = {};
+          const key = entry[0];
+          entity[key] = entry[1];
+          return entity;
+        })
+        .reduce((cur, acc) => Object.assign(acc, cur)) as {
         // eslint-disable-next-line camelcase
-        user_code?: string,
-    } : undefined;
+        user_code?: string;
+      })
+    : undefined;
 
   const code = event.queryStringParameters?.code;
   const idToken = event.queryStringParameters?.id_token;
   const accessToken = event.queryStringParameters?.access_token;
   const expiresIn = event.queryStringParameters?.expires_in;
   if (
-    (environments.responseType === 'code' && code === undefined)
-    || (environments.responseType === 'token' && (idToken === undefined || accessToken === undefined || expiresIn === undefined))
-    || state === undefined || state?.user_code === undefined) {
+    (environments.responseType === 'code' && code === undefined) ||
+    (environments.responseType === 'token' &&
+      (idToken === undefined ||
+        accessToken === undefined ||
+        expiresIn === undefined)) ||
+    state === undefined ||
+    state?.user_code === undefined
+  ) {
     // eslint-disable-next-line no-console
     console.warn('code or state, user_code are not found');
     // console.debug(`code: ${code} state: ${event.queryStringParameters?.state} user_code: ${state?.user_code}`);
@@ -192,17 +209,19 @@ export const handler = async (
       };
     }
 
-    const token = environments.responseType === 'code' && code
-      ? await authorize({
-        domain: environments.domain,
-        clientId: environments.clientId,
-        redirectUri: environments.redirectUri,
-        code,
-      }) : {
-        idToken,
-        accessToken,
-        expiresIn: Number(expiresIn || '0'),
-      };
+    const token =
+      environments.responseType === 'code' && code
+        ? await authorize({
+            domain: environments.domain,
+            clientId: environments.clientId,
+            redirectUri: environments.redirectUri,
+            code,
+          })
+        : {
+            idToken,
+            accessToken,
+            expiresIn: Number(expiresIn || '0'),
+          };
 
     // eslint-disable-next-line camelcase
     const { device_code, expire } = result.Items[0];

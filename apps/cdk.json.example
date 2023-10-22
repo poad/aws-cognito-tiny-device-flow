@@ -16,6 +16,7 @@
       "test"
     ]
   },
+  "requireApproval": "never",
   "context": {
     "dev": {
       "region": "us-west-2",

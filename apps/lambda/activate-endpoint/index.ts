@@ -6,17 +6,17 @@ import { Stream } from 'stream';
 import { ErrorResponse } from '../types';
 
 interface Environments {
-    bucketName: string,
-    region: string,
-    table: string,
-    domain: string,
-    clientId: string,
-    authorizeEndpoint: string,
-    redirectUri: string,
-    pathPrefix: string,
-    responseType: string,
-    identityProvider: string,
-    scope: string,
+  bucketName: string;
+  region: string;
+  table: string;
+  domain: string;
+  clientId: string;
+  authorizeEndpoint: string;
+  redirectUri: string;
+  pathPrefix: string;
+  responseType: string;
+  identityProvider: string;
+  scope: string;
 }
 
 const environments: Environments = {
@@ -33,31 +33,40 @@ const environments: Environments = {
   scope: process.env.SCOPE!,
 };
 
-const downloadObject = async (s3: S3Client, path: string): Promise<{
-    statusCode: number,
-    contentType: string,
-    body?: string
-} | undefined> => {
+const downloadObject = async (
+  s3: S3Client,
+  path: string
+): Promise<
+  | {
+      statusCode: number;
+      contentType: string;
+      body?: string;
+    }
+  | undefined
+> => {
   const key = `${environments.pathPrefix}/${path}`;
 
   // console.log(`s3 key: ${key}`);
 
-  const resp = await s3.send(new GetObjectCommand({
-    Bucket: environments.bucketName,
-    Key: key,
-  }));
+  const resp = await s3.send(
+    new GetObjectCommand({
+      Bucket: environments.bucketName,
+      Key: key,
+    })
+  );
   if (resp.Body === undefined) {
     // eslint-disable-next-line no-console
     console.warn('not found');
 
     return undefined;
   }
-  const streamToString = (stream: Stream): Promise<string> => new Promise((resolve, reject) => {
-    const chunks: Uint8Array[] = [];
-    stream.on('data', (chunk: Uint8Array) => chunks.push(chunk));
-    stream.on('error', reject);
-    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-  });
+  const streamToString = (stream: Stream): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const chunks: Uint8Array[] = [];
+      stream.on('data', (chunk: Uint8Array) => chunks.push(chunk));
+      stream.on('error', reject);
+      stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+    });
 
   return {
     statusCode: 200,
@@ -67,7 +76,7 @@ const downloadObject = async (s3: S3Client, path: string): Promise<{
 };
 
 export const handler = async (
-  event: APIGatewayProxyEventV2,
+  event: APIGatewayProxyEventV2
 ): Promise<APIGatewayProxyResultV2> => {
   // console.log(JSON.stringify(event));
 
@@ -81,17 +90,26 @@ export const handler = async (
   }
   const s3 = new S3Client({});
 
-  const body = event.body !== undefined ? Array.from(
-    new URLSearchParams(event.isBase64Encoded ? Buffer.from(event.body, 'base64').toString() : event.body),
-  ).map((entry) => {
-    const entity: { [key: string]: string } = {};
-    const key = entry[0];
-    entity[key] = entry[1];
-    return entity;
-  }).reduce((cur, acc) => Object.assign(acc, cur)) as {
-        // eslint-disable-next-line camelcase
-        user_code?: string,
-    } : undefined;
+  const body =
+    event.body !== undefined
+      ? (Array.from(
+          new URLSearchParams(
+            event.isBase64Encoded
+              ? Buffer.from(event.body, 'base64').toString()
+              : event.body
+          )
+        )
+          .map((entry) => {
+            const entity: { [key: string]: string } = {};
+            const key = entry[0];
+            entity[key] = entry[1];
+            return entity;
+          })
+          .reduce((cur, acc) => Object.assign(acc, cur)) as {
+          // eslint-disable-next-line camelcase
+          user_code?: string;
+        })
+      : undefined;
 
   const userCode = body?.user_code;
 
@@ -131,7 +149,10 @@ export const handler = async (
     }
 
     const responseType = environments.responseType;
-    const idp = environments.identityProvider !== '' ? { identity_provider: environments.identityProvider } : {};
+    const idp =
+      environments.identityProvider !== ''
+        ? { identity_provider: environments.identityProvider }
+        : {};
 
     const queryString = Object.entries({
       response_type: responseType,
@@ -141,8 +162,8 @@ export const handler = async (
       scope: environments.scope,
       ...idp,
     } as {
-            [key: string]: string
-        })
+      [key: string]: string;
+    })
       .map(([key, value]) => `${encodeURIComponent(key)}=${value}`)
       .reduce((cur, acc) => `${acc}&${cur}`);
 

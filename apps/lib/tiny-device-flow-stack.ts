@@ -1,18 +1,13 @@
-import {
-  AccountRecovery, CfnIdentityPool, CfnIdentityPoolRoleAttachment, Mfa, OAuthScope, UserPool, UserPoolClient,
-} from 'aws-cdk-lib/aws-cognito';
-import {
-  Effect, FederatedPrincipal, PolicyDocument, PolicyStatement, Role, ServicePrincipal,
-} from 'aws-cdk-lib/aws-iam';
-import { Runtime } from 'aws-cdk-lib/aws-lambda';
-import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
-import { RetentionDays } from 'aws-cdk-lib/aws-logs';
+import * as cognito from 'aws-cdk-lib/aws-cognito';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as nodejsLambda from 'aws-cdk-lib/aws-lambda-nodejs';
+import * as logs from 'aws-cdk-lib/aws-logs';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as cdk from 'aws-cdk-lib';
-import { Duration, RemovalPolicy } from 'aws-cdk-lib';
-import { HttpApi, HttpMethod } from '@aws-cdk/aws-apigatewayv2-alpha';
-import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
-import { Table, AttributeType } from 'aws-cdk-lib/aws-dynamodb';
+import * as apigatewayv2 from '@aws-cdk/aws-apigatewayv2-alpha';
+import * as integrations from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
 import assert from 'node:assert';
 import { Construct } from 'constructs';
@@ -38,11 +33,11 @@ export class TinyDeviceFlowStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: TinyDeviceFlowStackStackProps) {
     super(scope, id, props);
 
-    const api = new HttpApi(this, 'HttpApi', {
+    const api = new apigatewayv2.HttpApi(this, 'HttpApi', {
       apiName: `Device Authentication Flow API (${props.environment})`,
     });
 
-    const userPool = new UserPool(this, props.userPool, {
+    const userPool = new cognito.UserPool(this, props.userPool, {
       userPoolName: props.userPool,
       signInAliases: {
         username: true,
@@ -64,12 +59,12 @@ export class TinyDeviceFlowStack extends cdk.Stack {
           required: false,
         },
       },
-      mfa: Mfa.OPTIONAL,
+      mfa: cognito.Mfa.OPTIONAL,
       passwordPolicy: {
         minLength: 6,
       },
-      accountRecovery: AccountRecovery.EMAIL_ONLY,
-      removalPolicy: RemovalPolicy.DESTROY,
+      accountRecovery:cognito.AccountRecovery.EMAIL_ONLY,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
     userPool.addDomain('UserPoolDomain', {
@@ -78,7 +73,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       },
     });
 
-    const appClient = new UserPoolClient(this, 'AppClient', {
+    const appClient = new cognito.UserPoolClient(this, 'AppClient', {
       userPool,
       userPoolClientName: `${props.name}-user-pool-client`,
       authFlows: {
@@ -95,16 +90,16 @@ export class TinyDeviceFlowStack extends cdk.Stack {
           implicitCodeGrant: true,
         },
         scopes: [
-          OAuthScope.COGNITO_ADMIN,
-          OAuthScope.EMAIL,
-          OAuthScope.OPENID,
-          OAuthScope.PROFILE,
+          cognito.OAuthScope.COGNITO_ADMIN,
+          cognito.OAuthScope.EMAIL,
+          cognito.OAuthScope.OPENID,
+          cognito.OAuthScope.PROFILE,
         ],
       },
       preventUserExistenceErrors: true,
     });
 
-    const userPoolIdentityPool = new CfnIdentityPool(this, 'IdPool', {
+    const userPoolIdentityPool = new cognito.CfnIdentityPool(this, 'IdPool', {
       allowUnauthenticatedIdentities: false,
       cognitoIdentityProviders: [
         {
@@ -116,9 +111,9 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       identityPoolName: `${props.environment} users`,
     });
 
-    const userUnauthenticatedRole = new Role(this, 'UserCognitoDefaultUnauthenticatedRole', {
+    const userUnauthenticatedRole = new iam.Role(this, 'UserCognitoDefaultUnauthenticatedRole', {
       roleName: `${props.name}-unauth-role`,
-      assumedBy: new FederatedPrincipal('cognito-identity.amazonaws.com', {
+      assumedBy: new iam.FederatedPrincipal('cognito-identity.amazonaws.com', {
         StringEquals: {
           'cognito-identity.amazonaws.com:aud': userPoolIdentityPool.ref,
         },
@@ -127,10 +122,10 @@ export class TinyDeviceFlowStack extends cdk.Stack {
         },
       }, 'sts:AssumeRoleWithWebIdentity'),
       inlinePolicies: {
-        'allow-assume-role': new PolicyDocument({
+        'allow-assume-role': new iam.PolicyDocument({
           statements: [
-            new PolicyStatement({
-              effect: Effect.ALLOW,
+            new iam.PolicyStatement({
+              effect: iam.Effect.ALLOW,
               actions: [
                 'cognito-identity:*',
                 'cognito-idp:*',
@@ -144,9 +139,9 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       },
     });
 
-    const userAuthenticatedRole = new Role(this, 'UserCognitoDefaultAuthenticatedRole', {
+    const userAuthenticatedRole = new iam.Role(this, 'UserCognitoDefaultAuthenticatedRole', {
       roleName: `${props.name}-auth-role`,
-      assumedBy: new FederatedPrincipal('cognito-identity.amazonaws.com', {
+      assumedBy: new iam.FederatedPrincipal('cognito-identity.amazonaws.com', {
         StringEquals: {
           'cognito-identity.amazonaws.com:aud': userPoolIdentityPool.ref,
         },
@@ -154,12 +149,12 @@ export class TinyDeviceFlowStack extends cdk.Stack {
           'cognito-identity.amazonaws.com:amr': 'authenticated',
         },
       }, 'sts:AssumeRoleWithWebIdentity'),
-      maxSessionDuration: Duration.hours(12),
+      maxSessionDuration: cdk.Duration.hours(12),
       inlinePolicies: {
-        'allow-assume-role': new PolicyDocument({
+        'allow-assume-role': new iam.PolicyDocument({
           statements: [
-            new PolicyStatement({
-              effect: Effect.ALLOW,
+            new iam.PolicyStatement({
+              effect: iam.Effect.ALLOW,
               actions: [
                 'cognito-identity:*',
                 'cognito-idp:*',
@@ -174,7 +169,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
     });
 
     // eslint-disable-next-line no-new
-    new CfnIdentityPoolRoleAttachment(this, 'UsersIdPoolRoleAttachment', {
+    new cognito.CfnIdentityPoolRoleAttachment(this, 'UsersIdPoolRoleAttachment', {
       identityPoolId: userPoolIdentityPool.ref,
       roles: {
         authenticated: userAuthenticatedRole.roleArn,
@@ -182,24 +177,24 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       },
     });
 
-    const deviceCodeTable = new Table(this, 'DeveiceCodeTable', {
+    const deviceCodeTable = new dynamodb.Table(this, 'DeveiceCodeTable', {
       tableName: `${props.name}-device-code`,
       partitionKey: {
         name: 'device_code',
-        type: AttributeType.STRING,
+        type: dynamodb.AttributeType.STRING,
       },
       sortKey: {
         name: 'user_code',
-        type: AttributeType.STRING,
+        type: dynamodb.AttributeType.STRING,
       },
       timeToLiveAttribute: 'expire',
-      removalPolicy: RemovalPolicy.DESTROY,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
     const s3bucket = new s3.Bucket(this, 'S3Bucket', {
       bucketName: `${props.name}-static-site`,
       versioned: false,
-      removalPolicy: RemovalPolicy.DESTROY,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: false,
       accessControl: s3.BucketAccessControl.PRIVATE,
       publicReadAccess: false,
@@ -220,11 +215,11 @@ export class TinyDeviceFlowStack extends cdk.Stack {
     });
 
     const resourceEndpointFnName = `${props.name}-resource-endpoint`;
-    const resourceEndpointFn = new NodejsFunction(this, 'ResourceEndpointLambdaFunction', {
-      runtime: Runtime.NODEJS_18_X,
+    const resourceEndpointFn = new nodejsLambda.NodejsFunction(this, 'ResourceEndpointLambdaFunction', {
+      runtime: lambda.Runtime.NODEJS_18_X,
       entry: 'lambda/resource-endpoint/index.ts',
       functionName: resourceEndpointFnName,
-      logRetention: RetentionDays.ONE_DAY,
+      logRetention: logs.RetentionDays.ONE_DAY,
       retryAttempts: 0,
       bundling: {
         minify: true,
@@ -245,13 +240,13 @@ export class TinyDeviceFlowStack extends cdk.Stack {
         BUCKET_NAME: s3bucket.bucketName,
         PATH_PREFIX: 'web/static',
       },
-      role: new Role(this, 'ResourceEndpointLambdaExecutionRole', {
-        assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
+      role: new iam.Role(this, 'ResourceEndpointLambdaExecutionRole', {
+        assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
         inlinePolicies: {
-          'logs-policy': new PolicyDocument({
+          'logs-policy': new iam.PolicyDocument({
             statements: [
-              new PolicyStatement({
-                effect: Effect.ALLOW,
+              new iam.PolicyStatement({
+                effect: iam.Effect.ALLOW,
                 actions: [
                   'logs:CreateLogGroup',
                   'logs:CreateLogStream',
@@ -264,11 +259,11 @@ export class TinyDeviceFlowStack extends cdk.Stack {
               }),
             ],
           }),
-          's3-role-policy': new PolicyDocument(
+          's3-role-policy': new iam.PolicyDocument(
             {
               statements: [
-                new PolicyStatement({
-                  effect: Effect.ALLOW,
+                new iam.PolicyStatement({
+                  effect: iam.Effect.ALLOW,
                   actions: [
                     's3:GetAccountPublicAccessBlock',
                     's3:GetBucketAcl',
@@ -281,8 +276,8 @@ export class TinyDeviceFlowStack extends cdk.Stack {
                     '*',
                   ],
                 }),
-                new PolicyStatement({
-                  effect: Effect.ALLOW,
+                new iam.PolicyStatement({
+                  effect: iam.Effect.ALLOW,
                   actions: [
                     's3:ListBucket',
                   ],
@@ -290,8 +285,8 @@ export class TinyDeviceFlowStack extends cdk.Stack {
                     `${s3bucket.bucketArn}`,
                   ],
                 }),
-                new PolicyStatement({
-                  effect: Effect.ALLOW,
+                new iam.PolicyStatement({
+                  effect: iam.Effect.ALLOW,
                   actions: [
                     's3:Get*',
                   ],
@@ -308,11 +303,11 @@ export class TinyDeviceFlowStack extends cdk.Stack {
     });
 
     const deviceCodeEndpointFnName = `${props.name}-device-code-endpoint`;
-    const deviceCodeEndpointFn = new NodejsFunction(this, 'DeviceCodeEndpointLambdaFunction', {
-      runtime: Runtime.NODEJS_18_X,
+    const deviceCodeEndpointFn = new nodejsLambda.NodejsFunction(this, 'DeviceCodeEndpointLambdaFunction', {
+      runtime: lambda.Runtime.NODEJS_18_X,
       entry: 'lambda/device-code-endpoint/index.ts',
       functionName: deviceCodeEndpointFnName,
-      logRetention: RetentionDays.ONE_DAY,
+      logRetention: logs.RetentionDays.ONE_DAY,
       retryAttempts: 0,
       bundling: {
         minify: true,
@@ -335,13 +330,13 @@ export class TinyDeviceFlowStack extends cdk.Stack {
         EXPIRE_IN_SEC: '300',
         VERIFICATION_URI: `${api.url!}oauth/device/activate`,
       },
-      role: new Role(this, 'DeviceCodeEndpointExecutionRole', {
-        assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
+      role: new iam.Role(this, 'DeviceCodeEndpointExecutionRole', {
+        assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
         inlinePolicies: {
-          'logs-policy': new PolicyDocument({
+          'logs-policy': new iam.PolicyDocument({
             statements: [
-              new PolicyStatement({
-                effect: Effect.ALLOW,
+              new iam.PolicyStatement({
+                effect: iam.Effect.ALLOW,
                 actions: [
                   'logs:CreateLogGroup',
                   'logs:CreateLogStream',
@@ -359,11 +354,11 @@ export class TinyDeviceFlowStack extends cdk.Stack {
     });
 
     const tokenEndpointFnName = `${props.name}-token-endpoint`;
-    const tokenEndpointFn = new NodejsFunction(this, 'TokenEndpointLambdaFunction', {
-      runtime: Runtime.NODEJS_18_X,
+    const tokenEndpointFn = new nodejsLambda.NodejsFunction(this, 'TokenEndpointLambdaFunction', {
+      runtime: lambda.Runtime.NODEJS_18_X,
       entry: 'lambda/token-endpoint/index.ts',
       functionName: tokenEndpointFnName,
-      logRetention: RetentionDays.ONE_DAY,
+      logRetention: logs.RetentionDays.ONE_DAY,
       retryAttempts: 0,
       environment: {
         REGION: props.region,
@@ -384,13 +379,13 @@ export class TinyDeviceFlowStack extends cdk.Stack {
           '--format': 'cjs',
         },
       },
-      role: new Role(this, 'TokenEndpointLambdaExecutionRole', {
-        assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
+      role: new iam.Role(this, 'TokenEndpointLambdaExecutionRole', {
+        assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
         inlinePolicies: {
-          'logs-policy': new PolicyDocument({
+          'logs-policy': new iam.PolicyDocument({
             statements: [
-              new PolicyStatement({
-                effect: Effect.ALLOW,
+              new iam.PolicyStatement({
+                effect: iam.Effect.ALLOW,
                 actions: [
                   'logs:CreateLogGroup',
                   'logs:CreateLogStream',
@@ -423,11 +418,11 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       .map((scope) => scope[0])
       .reduce((acc, cur) => `${acc}+${cur}`);
     const activateEndpointFnName = `${props.name}-activate-endpoint`;
-    const activateEndpointFn = new NodejsFunction(this, 'ActivateEndpointLambdaFunction', {
-      runtime: Runtime.NODEJS_18_X,
+    const activateEndpointFn = new nodejsLambda.NodejsFunction(this, 'ActivateEndpointLambdaFunction', {
+      runtime: lambda.Runtime.NODEJS_18_X,
       entry: 'lambda/activate-endpoint/index.ts',
       functionName: activateEndpointFnName,
-      logRetention: RetentionDays.ONE_DAY,
+      logRetention: logs.RetentionDays.ONE_DAY,
       retryAttempts: 0,
       bundling: {
         minify: true,
@@ -456,13 +451,13 @@ export class TinyDeviceFlowStack extends cdk.Stack {
         IDENTITY_PROVIDER: identityProvider || 'COGNITO',
         SCOPE: scopeParam === '' ? 'openid' : scopeParam,
       },
-      role: new Role(this, 'ActivateEndpointLambdaExecutionRole', {
-        assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
+      role: new iam.Role(this, 'ActivateEndpointLambdaExecutionRole', {
+        assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
         inlinePolicies: {
-          'logs-policy': new PolicyDocument({
+          'logs-policy': new iam.PolicyDocument({
             statements: [
-              new PolicyStatement({
-                effect: Effect.ALLOW,
+              new iam.PolicyStatement({
+                effect: iam.Effect.ALLOW,
                 actions: [
                   'logs:CreateLogGroup',
                   'logs:CreateLogStream',
@@ -475,11 +470,11 @@ export class TinyDeviceFlowStack extends cdk.Stack {
               }),
             ],
           }),
-          's3-role-policy': new PolicyDocument(
+          's3-role-policy': new iam.PolicyDocument(
             {
               statements: [
-                new PolicyStatement({
-                  effect: Effect.ALLOW,
+                new iam.PolicyStatement({
+                  effect: iam.Effect.ALLOW,
                   actions: [
                     's3:GetAccountPublicAccessBlock',
                     's3:GetBucketAcl',
@@ -492,8 +487,8 @@ export class TinyDeviceFlowStack extends cdk.Stack {
                     '*',
                   ],
                 }),
-                new PolicyStatement({
-                  effect: Effect.ALLOW,
+                new iam.PolicyStatement({
+                  effect: iam.Effect.ALLOW,
                   actions: [
                     's3:ListBucket',
                   ],
@@ -501,8 +496,8 @@ export class TinyDeviceFlowStack extends cdk.Stack {
                     `${s3bucket.bucketArn}`,
                   ],
                 }),
-                new PolicyStatement({
-                  effect: Effect.ALLOW,
+                new iam.PolicyStatement({
+                  effect: iam.Effect.ALLOW,
                   actions: [
                     's3:Get*',
                   ],
@@ -519,11 +514,11 @@ export class TinyDeviceFlowStack extends cdk.Stack {
     });
 
     const activateCompleteEndpointFnName = `${props.name}-activate-complete-endpoint`;
-    const activateCompleteEndpointFn = new NodejsFunction(this, 'ActivateCompleteEndpointLambdaFunction', {
-      runtime: Runtime.NODEJS_18_X,
+    const activateCompleteEndpointFn = new nodejsLambda.NodejsFunction(this, 'ActivateCompleteEndpointLambdaFunction', {
+      runtime: lambda.Runtime.NODEJS_18_X,
       entry: 'lambda/activate-complete-endpoint/index.ts',
       functionName: activateCompleteEndpointFnName,
-      logRetention: RetentionDays.ONE_DAY,
+      logRetention: logs.RetentionDays.ONE_DAY,
       bundling: {
         minify: true,
         sourceMap: true,
@@ -550,13 +545,13 @@ export class TinyDeviceFlowStack extends cdk.Stack {
         PATH_PREFIX: 'web/static',
         RESPONSE_TYPE: responseType || 'code',
       },
-      role: new Role(this, 'ActivateCompleteEndpointLambdaExecutionRole', {
-        assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
+      role: new iam.Role(this, 'ActivateCompleteEndpointLambdaExecutionRole', {
+        assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
         inlinePolicies: {
-          'logs-policy': new PolicyDocument({
+          'logs-policy': new iam.PolicyDocument({
             statements: [
-              new PolicyStatement({
-                effect: Effect.ALLOW,
+              new iam.PolicyStatement({
+                effect: iam.Effect.ALLOW,
                 actions: [
                   'logs:CreateLogGroup',
                   'logs:CreateLogStream',
@@ -569,11 +564,11 @@ export class TinyDeviceFlowStack extends cdk.Stack {
               }),
             ],
           }),
-          's3-role-policy': new PolicyDocument(
+          's3-role-policy': new iam.PolicyDocument(
             {
               statements: [
-                new PolicyStatement({
-                  effect: Effect.ALLOW,
+                new iam.PolicyStatement({
+                  effect: iam.Effect.ALLOW,
                   actions: [
                     's3:GetAccountPublicAccessBlock',
                     's3:GetBucketAcl',
@@ -586,8 +581,8 @@ export class TinyDeviceFlowStack extends cdk.Stack {
                     '*',
                   ],
                 }),
-                new PolicyStatement({
-                  effect: Effect.ALLOW,
+                new iam.PolicyStatement({
+                  effect: iam.Effect.ALLOW,
                   actions: [
                     's3:ListBucket',
                   ],
@@ -595,8 +590,8 @@ export class TinyDeviceFlowStack extends cdk.Stack {
                     `${s3bucket.bucketArn}`,
                   ],
                 }),
-                new PolicyStatement({
-                  effect: Effect.ALLOW,
+                new iam.PolicyStatement({
+                  effect: iam.Effect.ALLOW,
                   actions: [
                     's3:Get*',
                   ],
@@ -616,8 +611,8 @@ export class TinyDeviceFlowStack extends cdk.Stack {
 
     api.addRoutes({
       path: '/{proxy+}',
-      methods: [HttpMethod.GET],
-      integration: new HttpLambdaIntegration(
+      methods: [apigatewayv2.HttpMethod.GET],
+      integration: new integrations.HttpLambdaIntegration(
         'proxy-handler',
         resourceEndpointFn,
       ),
@@ -625,8 +620,8 @@ export class TinyDeviceFlowStack extends cdk.Stack {
 
     api.addRoutes({
       path: '/oauth/device/code',
-      methods: [HttpMethod.POST],
-      integration: new HttpLambdaIntegration(
+      methods: [apigatewayv2.HttpMethod.POST],
+      integration: new integrations.HttpLambdaIntegration(
         'code-handler',
         deviceCodeEndpointFn,
       ),
@@ -634,8 +629,8 @@ export class TinyDeviceFlowStack extends cdk.Stack {
 
     api.addRoutes({
       path: '/oauth/token',
-      methods: [HttpMethod.POST],
-      integration: new HttpLambdaIntegration(
+      methods: [apigatewayv2.HttpMethod.POST],
+      integration: new integrations.HttpLambdaIntegration(
         'token-handler',
         tokenEndpointFn,
       ),
@@ -643,16 +638,16 @@ export class TinyDeviceFlowStack extends cdk.Stack {
 
     api.addRoutes({
       path: '/oauth/device/activate',
-      methods: [HttpMethod.GET, HttpMethod.POST],
-      integration: new HttpLambdaIntegration(
+      methods: [apigatewayv2.HttpMethod.GET, apigatewayv2.HttpMethod.POST],
+      integration: new integrations.HttpLambdaIntegration(
         'activate-handler',
         activateEndpointFn,
       ),
     });
     api.addRoutes({
       path: '/oauth/device/activate/{proxy+}',
-      methods: [HttpMethod.GET, HttpMethod.POST],
-      integration: new HttpLambdaIntegration(
+      methods: [apigatewayv2.HttpMethod.GET, apigatewayv2.HttpMethod.POST],
+      integration: new integrations.HttpLambdaIntegration(
         'activate-proxy-handler',
         activateEndpointFn,
       ),
@@ -660,16 +655,16 @@ export class TinyDeviceFlowStack extends cdk.Stack {
 
     api.addRoutes({
       path: '/oauth/complete',
-      methods: [HttpMethod.GET],
-      integration: new HttpLambdaIntegration(
+      methods: [apigatewayv2.HttpMethod.GET],
+      integration: new integrations.HttpLambdaIntegration(
         'complete-handler',
         activateCompleteEndpointFn,
       ),
     });
     api.addRoutes({
       path: '/oauth/complete/{proxy+}',
-      methods: [HttpMethod.GET],
-      integration: new HttpLambdaIntegration(
+      methods: [apigatewayv2.HttpMethod.GET],
+      integration: new integrations.HttpLambdaIntegration(
         'complete-proxy-handler',
         activateCompleteEndpointFn,
       ),

@@ -253,7 +253,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       this,
       'ResourceEndpointLambdaFunction',
       {
-        runtime: lambda.Runtime.NODEJS_18_X,
+        runtime: lambda.Runtime.NODEJS_20_X,
         architecture: lambda.Architecture.ARM_64,
         entry: 'lambda/resource-endpoint/index.ts',
         functionName: resourceEndpointFnName,
@@ -339,7 +339,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       this,
       'DeviceCodeEndpointLambdaFunction',
       {
-        runtime: lambda.Runtime.NODEJS_18_X,
+        runtime: lambda.Runtime.NODEJS_20_X,
         architecture: lambda.Architecture.ARM_64,
         entry: 'lambda/device-code-endpoint/index.ts',
         functionName: deviceCodeEndpointFnName,
@@ -398,7 +398,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       this,
       'TokenEndpointLambdaFunction',
       {
-        runtime: lambda.Runtime.NODEJS_18_X,
+        runtime: lambda.Runtime.NODEJS_20_X,
         architecture: lambda.Architecture.ARM_64,
         entry: 'lambda/token-endpoint/index.ts',
         functionName: tokenEndpointFnName,
@@ -474,7 +474,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       this,
       'ActivateEndpointLambdaFunction',
       {
-        runtime: lambda.Runtime.NODEJS_18_X,
+        runtime: lambda.Runtime.NODEJS_20_X,
         architecture: lambda.Architecture.ARM_64,
         entry: 'lambda/activate-endpoint/index.ts',
         functionName: activateEndpointFnName,
@@ -571,7 +571,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       this,
       'ActivateCompleteEndpointLambdaFunction',
       {
-        runtime: lambda.Runtime.NODEJS_18_X,
+        runtime: lambda.Runtime.NODEJS_20_X,
         architecture: lambda.Architecture.ARM_64,
         entry: 'lambda/activate-complete-endpoint/index.ts',
         functionName: activateCompleteEndpointFnName,

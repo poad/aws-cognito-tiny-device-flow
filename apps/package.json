@@ -25,7 +25,7 @@
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "aws-cdk": "^2.131.0",
+    "aws-cdk": "^2.132.0",
     "esbuild": "^0.19.12",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
@@ -40,11 +40,11 @@
     "typescript": "^5.4.2"
   },
   "dependencies": {
-    "@aws-sdk/client-cognito-identity-provider": "^3.529.1",
+    "@aws-sdk/client-cognito-identity-provider": "^3.530.0",
     "@aws-sdk/client-dynamodb": "^3.529.1",
     "@aws-sdk/client-s3": "^3.529.1",
     "@aws-sdk/util-dynamodb": "^3.529.1",
-    "aws-cdk-lib": "^2.131.0",
+    "aws-cdk-lib": "^2.132.0",
     "aws-lambda": "^1.0.7",
     "constructs": "^10.3.0",
     "randombytes": "^2.1.0",

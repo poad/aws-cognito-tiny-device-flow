@@ -41,5 +41,5 @@ export default function Process(): JSX.Element {
     handleFragments();
   }, []);
 
-  return <main></main>;
+  return <main />;
 }

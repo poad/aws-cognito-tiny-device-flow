@@ -38,7 +38,7 @@ const downloadObject = async (
     })
   );
   if (resp.Body === undefined) {
-    // eslint-disable-next-line no-console
+     
     console.warn('not found');
 
     return undefined;

@@ -6,7 +6,8 @@ export default function Process(): JSX.Element {
   const router = useRouter();
 
   const handleFragments = async () => {
-    const location = typeof window !== 'undefined' ? window.location : undefined;
+    const location =
+      typeof window !== 'undefined' ? window.location : undefined;
     const hash = location?.hash;
     if (hash !== undefined) {
       const fragment = new URLSearchParams(hash.replace(/^#?\/?/, ''));
@@ -19,13 +20,14 @@ export default function Process(): JSX.Element {
       const tokenType = fragment.get('token_type')?.toString();
 
       const parms = Object.entries({
-        'access_token': accessToken,
-        'id_token': idToken,
-        'expires_in': expiresIn,
-        'refresh_token': refreshToken,
+        access_token: accessToken,
+        id_token: idToken,
+        expires_in: expiresIn,
+        refresh_token: refreshToken,
         state,
-        'token_type': tokenType,
-      }).map(entry => `${entry[0]}=${entry[1]}`)
+        token_type: tokenType,
+      })
+        .map((entry) => `${entry[0]}=${entry[1]}`)
         .reduce((acc, cur) => `${acc}&${cur}`);
 
       console.log(`/oauth/complete?${parms}`);
@@ -39,7 +41,5 @@ export default function Process(): JSX.Element {
     handleFragments();
   }, []);
 
-  return (
-    <main></main>
-  );
+  return <main></main>;
 }

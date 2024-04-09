@@ -11,7 +11,7 @@ const env = app.node.tryGetContext('env') as string;
 
 const context = app.node.tryGetContext(env);
 
-// eslint-disable-next-line no-new
+ 
 new TinyDeviceFlowStack(app, `${env}-tiny-device-flow-stack`, {
   name: `${env}-tiny-device-flow`,
   environment: env,

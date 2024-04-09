@@ -7,7 +7,7 @@ import { marshall } from '@aws-sdk/util-dynamodb';
 import { URLSearchParams } from 'url';
 import { ErrorResponse, DeviceCodeTable } from '../types';
 
-/* eslint-disable camelcase */
+ 
 interface DeviceAuthorizationResponse {
   device_code: string;
   user_code: string;
@@ -17,7 +17,7 @@ interface DeviceAuthorizationResponse {
   interval?: number;
   message?: string;
 }
-/* eslint-enable camelcase */
+ 
 
 export const handler = async (
   event: APIGatewayProxyEventV2
@@ -41,10 +41,10 @@ export const handler = async (
             return entity;
           })
           .reduce((cur, acc) => Object.assign(acc, cur)) as {
-          /* eslint-disable camelcase */
+           
           client_id?: string;
           scope?: string;
-          /* eslint-enable camelcase */
+           
         })
       : undefined;
   if (body === undefined || body.client_id === undefined) {
@@ -99,7 +99,7 @@ export const handler = async (
       expires_in: duration,
     } as DeviceAuthorizationResponse;
   } catch (err) {
-    // eslint-disable-next-line no-console
+     
     console.error(err);
 
     return {

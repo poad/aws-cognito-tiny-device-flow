@@ -8,9 +8,16 @@ export default function Error(): JSX.Element {
 
       <main>
         <div className="flex justify-center items-center">
-          <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="/oauth/device/activate" method="POST">
+          <form
+            className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+            action="/oauth/device/activate"
+            method="POST"
+          >
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="user_code">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="user_code"
+              >
                 Input code
               </label>
               <input
@@ -30,7 +37,9 @@ export default function Error(): JSX.Element {
             </div>
           </form>
         </div>
-        <p className="flex items-center justify-center text-red-500 pt-2">Invalid code or expired.</p>
+        <p className="flex items-center justify-center text-red-500 pt-2">
+          Invalid code or expired.
+        </p>
       </main>
     </div>
   );

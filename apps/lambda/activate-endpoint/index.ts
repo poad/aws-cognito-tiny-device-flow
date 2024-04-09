@@ -55,7 +55,7 @@ const downloadObject = async (
     })
   );
   if (resp.Body === undefined) {
-    // eslint-disable-next-line no-console
+     
     console.warn('not found');
 
     return undefined;
@@ -106,7 +106,7 @@ export const handler = async (
             return entity;
           })
           .reduce((cur, acc) => Object.assign(acc, cur)) as {
-          // eslint-disable-next-line camelcase
+           
           user_code?: string;
         })
       : undefined;
@@ -177,7 +177,7 @@ export const handler = async (
       headers: { Location: authorizeURI },
     };
   } catch (err) {
-    // eslint-disable-next-line no-console
+     
     console.error(err);
 
     return {

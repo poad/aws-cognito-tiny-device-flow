@@ -64,7 +64,7 @@ const authorize = async (param: {
     body,
   });
 
-  /* eslint-disable camelcase */
+   
   const json = (await resp.json()) as {
     access_token: string;
     refresh_token: string;
@@ -72,9 +72,9 @@ const authorize = async (param: {
     token_type: string;
     expires_in: number;
   };
-  /* eslint-enable camelcase */
+   
 
-  /* eslint-disable camelcase */
+   
   return {
     idToken: json.id_token,
     accessToken: json.access_token,
@@ -82,7 +82,7 @@ const authorize = async (param: {
     expiresIn: json.expires_in,
     tokenType: json.token_type,
   };
-  /* eslint-enable camelcase */
+   
 };
 
 const downloadObject = async (
@@ -106,7 +106,7 @@ const downloadObject = async (
     })
   );
   if (resp.Body === undefined) {
-    // eslint-disable-next-line no-console
+     
     console.warn('not found');
 
     return undefined;
@@ -154,7 +154,7 @@ export const handler = async (
           return entity;
         })
         .reduce((cur, acc) => Object.assign(acc, cur)) as {
-        // eslint-disable-next-line camelcase
+         
         user_code?: string;
       })
     : undefined;
@@ -172,7 +172,7 @@ export const handler = async (
     state === undefined ||
     state?.user_code === undefined
   ) {
-    // eslint-disable-next-line no-console
+     
     console.warn('code or state, user_code are not found');
     // console.debug(`code: ${code} state: ${event.queryStringParameters?.state} user_code: ${state?.user_code}`);
     return {
@@ -223,10 +223,10 @@ export const handler = async (
             expiresIn: Number(expiresIn || '0'),
           };
 
-    // eslint-disable-next-line camelcase
+     
     const { device_code, expire } = result.Items[0];
 
-    /* eslint-disable camelcase */
+     
     const item: DeviceCodeTable = {
       device_code: device_code.S!,
       user_code: userCode,
@@ -236,7 +236,7 @@ export const handler = async (
       token_expire: token.expiresIn,
       expire: Number(expire.N!),
     };
-    /* eslint-enable camelcase */
+     
 
     await dynamoClient.putItem({
       Item: marshall(item),
@@ -251,7 +251,7 @@ export const handler = async (
       body: content!.body,
     };
   } catch (err) {
-    // eslint-disable-next-line no-console
+     
     console.error(err);
 
     return {

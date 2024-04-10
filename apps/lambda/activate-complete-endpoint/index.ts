@@ -64,7 +64,6 @@ const authorize = async (param: {
     body,
   });
 
-   
   const json = (await resp.json()) as {
     access_token: string;
     refresh_token: string;
@@ -72,9 +71,7 @@ const authorize = async (param: {
     token_type: string;
     expires_in: number;
   };
-   
 
-   
   return {
     idToken: json.id_token,
     accessToken: json.access_token,
@@ -82,7 +79,6 @@ const authorize = async (param: {
     expiresIn: json.expires_in,
     tokenType: json.token_type,
   };
-   
 };
 
 const downloadObject = async (
@@ -106,7 +102,6 @@ const downloadObject = async (
     })
   );
   if (resp.Body === undefined) {
-     
     console.warn('not found');
 
     return undefined;
@@ -154,7 +149,6 @@ export const handler = async (
           return entity;
         })
         .reduce((cur, acc) => Object.assign(acc, cur)) as {
-         
         user_code?: string;
       })
     : undefined;
@@ -172,7 +166,6 @@ export const handler = async (
     state === undefined ||
     state?.user_code === undefined
   ) {
-     
     console.warn('code or state, user_code are not found');
     // console.debug(`code: ${code} state: ${event.queryStringParameters?.state} user_code: ${state?.user_code}`);
     return {
@@ -223,10 +216,8 @@ export const handler = async (
             expiresIn: Number(expiresIn || '0'),
           };
 
-     
     const { device_code, expire } = result.Items[0];
 
-     
     const item: DeviceCodeTable = {
       device_code: device_code.S!,
       user_code: userCode,
@@ -236,7 +227,6 @@ export const handler = async (
       token_expire: token.expiresIn,
       expire: Number(expire.N!),
     };
-     
 
     await dynamoClient.putItem({
       Item: marshall(item),
@@ -251,7 +241,6 @@ export const handler = async (
       body: content!.body,
     };
   } catch (err) {
-     
     console.error(err);
 
     return {

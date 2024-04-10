@@ -7,7 +7,6 @@ import { marshall } from '@aws-sdk/util-dynamodb';
 import { URLSearchParams } from 'url';
 import { ErrorResponse, DeviceCodeTable } from '../types';
 
- 
 interface DeviceAuthorizationResponse {
   device_code: string;
   user_code: string;
@@ -17,7 +16,6 @@ interface DeviceAuthorizationResponse {
   interval?: number;
   message?: string;
 }
- 
 
 export const handler = async (
   event: APIGatewayProxyEventV2
@@ -41,10 +39,8 @@ export const handler = async (
             return entity;
           })
           .reduce((cur, acc) => Object.assign(acc, cur)) as {
-           
           client_id?: string;
           scope?: string;
-           
         })
       : undefined;
   if (body === undefined || body.client_id === undefined) {
@@ -99,7 +95,6 @@ export const handler = async (
       expires_in: duration,
     } as DeviceAuthorizationResponse;
   } catch (err) {
-     
     console.error(err);
 
     return {

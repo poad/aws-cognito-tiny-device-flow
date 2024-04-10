@@ -55,7 +55,6 @@ const downloadObject = async (
     })
   );
   if (resp.Body === undefined) {
-     
     console.warn('not found');
 
     return undefined;
@@ -106,7 +105,6 @@ export const handler = async (
             return entity;
           })
           .reduce((cur, acc) => Object.assign(acc, cur)) as {
-           
           user_code?: string;
         })
       : undefined;
@@ -177,7 +175,6 @@ export const handler = async (
       headers: { Location: authorizeURI },
     };
   } catch (err) {
-     
     console.error(err);
 
     return {

@@ -191,7 +191,6 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       }
     );
 
-     
     new cognito.CfnIdentityPoolRoleAttachment(
       this,
       'UsersIdPoolRoleAttachment',
@@ -234,7 +233,6 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       ],
     });
 
-     
     new s3deploy.BucketDeployment(this, 'DeployWebsite', {
       sources: [s3deploy.Source.asset(`${process.cwd()}/pages/out`)],
       destinationBucket: s3bucket,
@@ -243,7 +241,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
 
     const resourceEndpointFnName = `${props.name}-resource-endpoint`;
     const resourceEndpointFnLogName = `/aws/lambda/${resourceEndpointFnName}`;
-     
+
     new logs.LogGroup(this, 'ResourceEndpointLambdaFunctionLogGroup', {
       logGroupName: resourceEndpointFnLogName,
       retention: logs.RetentionDays.ONE_DAY,
@@ -329,7 +327,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
 
     const deviceCodeEndpointFnName = `${props.name}-device-code-endpoint`;
     const deviceCodeEndpointFnLogName = `/aws/lambda/${deviceCodeEndpointFnName}`;
-     
+
     new logs.LogGroup(this, 'DeviceCodeEndpointLambdaFunctionLogGroup', {
       logGroupName: deviceCodeEndpointFnLogName,
       retention: logs.RetentionDays.ONE_DAY,
@@ -388,7 +386,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
 
     const tokenEndpointFnName = `${props.name}-token-endpoint`;
     const tokenEndpointFnLogName = `/aws/lambda/${tokenEndpointFnName}`;
-     
+
     new logs.LogGroup(this, 'TokenEndpointLambdaFunctionLogGroup', {
       logGroupName: tokenEndpointFnLogName,
       retention: logs.RetentionDays.ONE_DAY,
@@ -446,9 +444,9 @@ export class TinyDeviceFlowStack extends cdk.Stack {
     const { responseType, identityProvider, scopes } = props;
 
     const availableScopes = Object.entries(scopes)
-       
+
       .filter((scope) => scope[1])
-       
+
       .map((scope) => scope[0]);
     assert(
       availableScopes.length > 0,
@@ -456,15 +454,15 @@ export class TinyDeviceFlowStack extends cdk.Stack {
     );
 
     const scopeParam = Object.entries(scopes)
-       
+
       .filter((scope) => scope[1])
-       
+
       .map((scope) => scope[0])
       .reduce((acc, cur) => `${acc}+${cur}`);
 
     const activateEndpointFnName = `${props.name}-activate-endpoint`;
     const activateEndpointFnLogName = `/aws/lambda/${activateEndpointFnName}`;
-     
+
     new logs.LogGroup(this, 'ActivateEndpointLambdaFunctionLogGroup', {
       logGroupName: activateEndpointFnLogName,
       retention: logs.RetentionDays.ONE_DAY,
@@ -561,7 +559,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
 
     const activateCompleteEndpointFnName = `${props.name}-activate-complete-endpoint`;
     const activateCompleteEndpointFnLogName = `/aws/lambda/${activateCompleteEndpointFnName}`;
-     
+
     new logs.LogGroup(this, 'ActivateCompleteEndpointLambdaFunctionLogGroup', {
       logGroupName: activateCompleteEndpointFnLogName,
       retention: logs.RetentionDays.ONE_DAY,

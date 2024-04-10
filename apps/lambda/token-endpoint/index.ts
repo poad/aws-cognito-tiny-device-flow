@@ -3,14 +3,12 @@ import { DynamoDB, QueryCommandInput } from '@aws-sdk/client-dynamodb';
 import { URLSearchParams } from 'url';
 import { ErrorResponse } from '../types';
 
- 
 interface DeviceAccessTokenResponse {
   id_token: string;
   access_token: string;
   token_type: string;
   expires_in?: number;
 }
- 
 
 export const handler = async (
   event: APIGatewayProxyEventV2
@@ -34,14 +32,12 @@ export const handler = async (
             return entity;
           })
           .reduce((cur, acc) => Object.assign(acc, cur)) as {
-           
           grant_type?: string;
           device_code?: string;
           client_id?: string;
-           
         })
       : undefined;
-   
+
   const { grant_type, device_code, client_id } = body || {};
   if (
     grant_type === undefined ||
@@ -58,30 +54,23 @@ export const handler = async (
       } as ErrorResponse),
     };
   }
-   
 
-   
   if (grant_type !== 'urn:ietf:params:oauth:grant-type:device_code') {
     return {
       statusCode: 400,
       body: JSON.stringify({
-         
         error: 'unsupported_grant_type',
         error_description: 'The app requested an unsupported grant type',
-         
       } as ErrorResponse),
     };
   }
 
-   
   if (client_id !== process.env.CLIENT_ID!) {
     return {
       statusCode: 400,
       body: JSON.stringify({
-         
         error: 'unauthorized_client',
         error_description: 'Unauthorized or unknown client',
-         
       } as ErrorResponse),
     };
   }
@@ -94,9 +83,7 @@ export const handler = async (
     TableName: process.env.TABLE_NAME,
     KeyConditionExpression: 'device_code = :device_code',
     ExpressionAttributeValues: {
-       
       ':device_code': { S: device_code },
-       
     },
   };
 
@@ -107,31 +94,26 @@ export const handler = async (
       return {
         statusCode: 400,
         body: JSON.stringify({
-           
           error: 'invalid_grant',
           error_description: 'Invalid or expired device code.',
-           
         } as ErrorResponse),
       };
     }
 
     const item = result.Items[0];
-     
+
     if (item.access_token === undefined || item.token_type === undefined) {
       return {
         statusCode: 400,
         body: JSON.stringify({
-           
           error: 'authorization_pending',
           error_description:
             'OAuth 2.0 device flow error. Authorization is pending. Continue polling.',
-           
         } as ErrorResponse),
       };
     }
 
     return {
-       
       id_token: item.id_token.S!,
       access_token: item.access_token.S!,
       token_type: item.token_type.S!,
@@ -139,10 +121,8 @@ export const handler = async (
         item.token_expire.N !== undefined
           ? Number(item.token_expire.N)
           : undefined,
-       
     } as DeviceAccessTokenResponse;
   } catch (err) {
-     
     console.error(err);
 
     return {

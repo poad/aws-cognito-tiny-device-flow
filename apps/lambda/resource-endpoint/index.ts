@@ -38,7 +38,6 @@ const downloadObject = async (
     })
   );
   if (resp.Body === undefined) {
-     
     console.warn('not found');
 
     return undefined;
@@ -94,12 +93,14 @@ export const handler = async (
   return content !== undefined
     ? {
         statusCode: 200,
-        headers: { 'Content-Type': mimeType(proxy, content?.contentType!) },
+        headers: {
+          'Content-Type': mimeType(proxy, content?.contentType ?? ''),
+        },
         body: content?.body,
       }
     : {
         statusCode: 404,
-        headers: { 'Content-Type': notFound?.contentType! },
+        headers: { 'Content-Type': notFound?.contentType ?? '' },
         body: notFound?.body,
       };
 };

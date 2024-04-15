@@ -1,6 +1,5 @@
 'use client';
 import { ReactNode } from 'react';
-import 'tailwindcss/tailwind.css';
 import './globals.css';
 import StyledJsxRegistry from './registry';
 

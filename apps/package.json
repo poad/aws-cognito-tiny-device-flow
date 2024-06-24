@@ -20,7 +20,7 @@
     "@swc/helpers": "^0.5.11",
     "@types/aws-lambda": "^8.10.140",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.14.7",
+    "@types/node": "^20.14.8",
     "@types/randombytes": "^2.0.3",
     "@types/uuid": "^9.0.8",
     "aws-cdk": "^2.147.0",

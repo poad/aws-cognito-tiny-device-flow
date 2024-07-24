@@ -16,11 +16,11 @@
     "lint-fix": "pnpm run /^.*:fix/"
   },
   "devDependencies": {
-    "@swc/core": "^1.7.0",
+    "@swc/core": "^1.7.1",
     "@swc/helpers": "^0.5.12",
-    "@types/aws-lambda": "^8.10.141",
+    "@types/aws-lambda": "^8.10.142",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.14.11",
+    "@types/node": "^20.14.12",
     "@types/randombytes": "^2.0.3",
     "@types/uuid": "^9.0.8",
     "aws-cdk": "^2.150.0",

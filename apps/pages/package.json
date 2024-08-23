@@ -19,14 +19,14 @@
     "all": "pnpm lint-fix && pnpm build && pnpm test"
   },
   "dependencies": {
-    "next": "^14.2.5",
+    "next": "^14.2.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "styled-jsx": "^5.1.6",
     "tailwindcss": "^3.4.10"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^14.2.5",
+    "@next/bundle-analyzer": "^14.2.6",
     "@types/node": "22.5.0",
     "@types/react": "^18.3.4",
     "autoprefixer": "^10.4.20",

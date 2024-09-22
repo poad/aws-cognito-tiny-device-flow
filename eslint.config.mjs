@@ -1,11 +1,13 @@
 // @ts-check
 
 import eslint from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
+import stylisticTs from '@stylistic/eslint-plugin-ts';
+import stylisticJsx from '@stylistic/eslint-plugin-jsx';
 import nextPlugin from '@next/eslint-plugin-next';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import importPlugin from 'eslint-plugin-import';
 
-import prettier from 'eslint-config-prettier';
 import tseslint from 'typescript-eslint';
 import { FlatCompat } from '@eslint/eslintrc';
 
@@ -25,15 +27,28 @@ export default tseslint.config(
       '.storybook',
     ],
   },
-  {
-    files: ['**/*.{jsx,ts,tsx}'],
-  },
   eslint.configs.recommended,
-  ...tseslint.configs.recommended,
+  ...tseslint.configs.strict,
+  ...tseslint.configs.stylistic,
   {
-    files: ['**/*.{jsx,tsx}'],
+    files: ['./src/**/*.{ts,tsx}', './{lambda,bin,lib}/**/*.{ts,js,tsx,jsx}'],
+    ...importPlugin.configs.recommended,
+    ...importPlugin.configs.typescript,
+    languageOptions: {
+      parser: tseslint.parser,
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+    },
+    plugins: {
+      '@stylistic': stylistic,
+      '@stylistic/ts': stylisticTs,
+      '@stylistic/jsx': stylisticJsx,
+      '@next/next': nextPlugin,
+    },
     extends: [
+      // @ts-expect-error ignore type error
       ...compat.config(reactHooksPlugin.configs.recommended),
+      // ...compat.config(jsxA11yPlugin.configs.recommended),
     ],
     settings: {
       react: {
@@ -45,36 +60,8 @@ export default tseslint.config(
         { name: 'NavLink', linkAttribute: 'to' },
       ],
       'import/resolver': {
-        typescript: {},
+        typescript: true,
       },
-    },
-  },
-  {
-    files: ['**/*.{ts,tsx}'],
-    plugins: {
-      import: importPlugin,
-    },
-    extends: [
-      ...tseslint.configs.recommended,
-      ...compat.config(importPlugin.configs.recommended),
-      ...compat.config(importPlugin.configs.typescript),
-    ],
-    settings: {
-      'import/internal-regex': '^~/',
-      'import/resolver': {
-        node: {
-          extensions: ['.ts', '.tsx'],
-        },
-        typescript: {
-          alwaysTryTypes: true,
-        },
-      },
-    },
-  },
-  {
-    files: ['**/*.{js,jsx,ts,tsx}'],
-    plugins: {
-      '@next/next': nextPlugin,
     },
     rules: {
       ...nextPlugin.configs.recommended.rules,
@@ -82,16 +69,12 @@ export default tseslint.config(
       '@next/next/no-duplicate-head': 'off',
       '@next/next/no-img-element': 'error',
       '@next/next/no-page-custom-font': 'off',
-    },
-  },
-  {
-    files: ['**/*.{js,jsx,ts,tsx}'],
-    rules: {
-      ...prettier.rules,
-    },
-  },
-  {
-    rules: {
+      '@stylistic/semi': 'error',
+      '@stylistic/ts/indent': ['error', 2],
+      '@stylistic/jsx/jsx-indent': ['error', 2],
+      'comma-dangle': ['error', 'always-multiline'],
+      'arrow-parens': ['error', 'always'],
+      quotes: ['error', 'single'],
       'react/display-name': 'off',
       'import/namespace': 'off',
       'import/no-named-as-default': 'off',

@@ -20,17 +20,17 @@ interface Environments {
 }
 
 const environments: Environments = {
-  bucketName: process.env.BUCKET_NAME!,
-  region: process.env.REGION!,
-  table: process.env.TABLE_NAME!,
-  domain: process.env.DOMAIN!,
-  clientId: process.env.CLIENT_ID!,
-  authorizeEndpoint: process.env.AUTHORIZE_ENDPOINT!,
-  redirectUri: process.env.REDIRECT_URI!,
-  pathPrefix: process.env.PATH_PREFIX!,
-  responseType: process.env.RESPONSE_TYPE!,
-  identityProvider: process.env.IDENTITY_PROVIDER!,
-  scope: process.env.SCOPE!,
+  bucketName: process.env.BUCKET_NAME ?? '',
+  region: process.env.REGION ?? '',
+  table: process.env.TABLE_NAME ?? '',
+  domain: process.env.DOMAIN ?? '',
+  clientId: process.env.CLIENT_ID ?? '',
+  authorizeEndpoint: process.env.AUTHORIZE_ENDPOINT ?? '',
+  redirectUri: process.env.REDIRECT_URI ?? '',
+  pathPrefix: process.env.PATH_PREFIX ?? '',
+  responseType: process.env.RESPONSE_TYPE ?? '',
+  identityProvider: process.env.IDENTITY_PROVIDER ?? '',
+  scope: process.env.SCOPE ?? '',
 };
 
 const downloadObject = async (
@@ -69,7 +69,7 @@ const downloadObject = async (
 
   return {
     statusCode: 200,
-    contentType: resp.ContentType!,
+    contentType: resp.ContentType ?? '',
     body: await streamToString(resp.Body as Stream),
   };
 };
@@ -99,7 +99,7 @@ export const handler = async (
           )
         )
           .map((entry) => {
-            const entity: { [key: string]: string } = {};
+            const entity: Record<string, string> = {};
             const key = entry[0];
             entity[key] = entry[1];
             return entity;
@@ -116,8 +116,8 @@ export const handler = async (
 
     return {
       statusCode: 200,
-      headers: { 'Content-Type': content!.contentType! },
-      body: content!.body,
+      headers: { 'Content-Type': content?.contentType ?? '' },
+      body: content?.body,
     };
   }
 
@@ -141,8 +141,8 @@ export const handler = async (
 
       return {
         statusCode: 200,
-        headers: { 'Content-Type': content!.contentType! },
-        body: content!.body,
+        headers: { 'Content-Type': content?.contentType ?? '' },
+        body: content?.body,
       };
     }
 
@@ -156,12 +156,10 @@ export const handler = async (
       response_type: responseType,
       client_id: encodeURIComponent(environments.clientId),
       redirect_uri: encodeURIComponent(environments.redirectUri),
-      state: encodeURIComponent(event.body!),
+      state: encodeURIComponent(event.body ?? ''),
       scope: environments.scope,
       ...idp,
-    } as {
-      [key: string]: string;
-    })
+    } as Record<string, string>)
       .map(([key, value]) => `${encodeURIComponent(key)}=${value}`)
       .reduce((cur, acc) => `${acc}&${cur}`);
 

@@ -19,15 +19,15 @@ interface Environments {
 }
 
 const environments: Environments = {
-  bucketName: process.env.BUCKET_NAME!,
-  region: process.env.REGION!,
-  table: process.env.TABLE_NAME!,
-  domain: process.env.DOMAIN!,
-  clientId: process.env.CLIENT_ID!,
-  redirectUri: process.env.REDIRECT_URI!,
-  retryUri: process.env.RETRY_URI!,
-  pathPrefix: process.env.PATH_PREFIX!,
-  responseType: process.env.RESPONSE_TYPE!,
+  bucketName: process.env.BUCKET_NAME ?? '',
+  region: process.env.REGION ?? '',
+  table: process.env.TABLE_NAME ?? '',
+  domain: process.env.DOMAIN ?? '',
+  clientId: process.env.CLIENT_ID ?? '',
+  redirectUri: process.env.REDIRECT_URI ?? '',
+  retryUri: process.env.RETRY_URI ?? '',
+  pathPrefix: process.env.PATH_PREFIX ?? '',
+  responseType: process.env.RESPONSE_TYPE ?? '',
 };
 
 const authorize = async (param: {
@@ -47,9 +47,7 @@ const authorize = async (param: {
     client_id: encodeURIComponent(param.clientId),
     redirect_uri: encodeURIComponent(param.redirectUri),
     code: encodeURIComponent(param.code),
-  } as {
-    [key: string]: string;
-  })
+  } as Record<string, string>)
     .map(([key, value]) => `${encodeURIComponent(key)}=${value}`)
     .reduce((cur, acc) => `${acc}&${cur}`);
 
@@ -116,7 +114,7 @@ const downloadObject = async (
 
   return {
     statusCode: 200,
-    contentType: resp.ContentType!,
+    contentType: resp.ContentType ?? '',
     body: await streamToString(resp.Body as Stream),
   };
 };
@@ -143,7 +141,7 @@ export const handler = async (
         )
       )
         .map((entry) => {
-          const entity: { [key: string]: string } = {};
+          const entity: Record<string, string> = {};
           const key = entry[0];
           entity[key] = entry[1];
           return entity;
@@ -175,7 +173,7 @@ export const handler = async (
     };
   }
 
-  const userCode = state.user_code!;
+  const userCode = state.user_code ?? '';
 
   const dynamoClient = new DynamoDB({
     region: environments.region,
@@ -197,8 +195,8 @@ export const handler = async (
 
       return {
         statusCode: 200,
-        headers: { 'Content-Type': content!.contentType! },
-        body: content!.body,
+        headers: { 'Content-Type': content?.contentType ?? '' },
+        body: content?.body,
       };
     }
 
@@ -213,19 +211,19 @@ export const handler = async (
         : {
             idToken,
             accessToken,
-            expiresIn: Number(expiresIn || '0'),
+            expiresIn: Number(expiresIn ?? '0'),
           };
 
     const { device_code, expire } = result.Items[0];
 
     const item: DeviceCodeTable = {
-      device_code: device_code.S!,
+      device_code: device_code.S ?? '',
       user_code: userCode,
       token_type: 'Bearer',
       id_token: token.idToken,
       access_token: token.accessToken,
       token_expire: token.expiresIn,
-      expire: Number(expire.N!),
+      expire: Number(expire.N ?? 0),
     };
 
     await dynamoClient.putItem({
@@ -237,8 +235,8 @@ export const handler = async (
 
     return {
       statusCode: 200,
-      headers: { 'Content-Type': content!.contentType! },
-      body: content!.body,
+      headers: { 'Content-Type': content?.contentType ?? '' },
+      body: content?.body,
     };
   } catch (err) {
     console.error(err);

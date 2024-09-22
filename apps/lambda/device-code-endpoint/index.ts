@@ -34,7 +34,7 @@ export const handler = async (
           )
         )
           .map((entry) => {
-            const entity: { [key: string]: string } = {};
+            const entity: Record<string, string> = {};
             entity[entry[0]] = entry[1];
             return entity;
           })
@@ -71,10 +71,10 @@ export const handler = async (
   const deviceCode = crypto.createHash('sha512').update(uuid).digest('hex');
 
   const dynamoClient = new DynamoDB({
-    region: process.env.REGION!,
+    region: process.env.REGION,
   });
 
-  const duration = Number(process.env.EXPIRE_IN_SEC || '300');
+  const duration = Number(process.env.EXPIRE_IN_SEC ?? '300');
 
   const item: PutItemInput = {
     Item: marshall({
@@ -91,7 +91,7 @@ export const handler = async (
     return {
       device_code: deviceCode,
       user_code: userCode,
-      verification_uri: process.env.VERIFICATION_URI!,
+      verification_uri: process.env.VERIFICATION_URI ?? '',
       expires_in: duration,
     } as DeviceAuthorizationResponse;
   } catch (err) {

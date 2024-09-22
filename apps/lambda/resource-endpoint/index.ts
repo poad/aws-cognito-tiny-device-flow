@@ -10,10 +10,10 @@ interface Environments {
 }
 
 const environments: Environments = {
-  bucketName: process.env.BUCKET_NAME!,
-  region: process.env.REGION!,
-  domain: process.env.DOMAIN!,
-  pathPrefix: process.env.PATH_PREFIX!,
+  bucketName: process.env.BUCKET_NAME ?? '',
+  region: process.env.REGION ?? '',
+  domain: process.env.DOMAIN ?? '',
+  pathPrefix: process.env.PATH_PREFIX ?? '',
 };
 
 const downloadObject = async (
@@ -52,7 +52,7 @@ const downloadObject = async (
 
   return {
     statusCode: 200,
-    contentType: resp.ContentType!,
+    contentType: resp.ContentType ?? '',
     body: await streamToString(resp.Body as Stream),
   };
 };

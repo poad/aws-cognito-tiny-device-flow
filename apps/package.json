@@ -3,56 +3,35 @@
   "version": "0.1.0",
   "bin": "bin/tiny-device-flow.js",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "style:fix": "prettier --write lambda bin lib",
-    "style:check": "prettier --check lambda bin lib",
-    "eslint:fix": "eslint './{lambda,bin,lib}/**/*.{ts,js,tsx,jsx}' --fix",
-    "eslint:check": "eslint './{lambda,bin,lib}/**/*.{ts,js,tsx,jsx}'",
-    "lint": "pnpm run --parallel /^.*:check/",
-    "lint-fix": "pnpm run /^.*:fix/"
+    "lint-fix": "eslint './{lambda,bin,lib}/**/*.{ts,js,tsx,jsx}' --fix",
+    "lint": "eslint './{lambda,bin,lib}/**/*.{ts,js,tsx,jsx}'"
   },
   "devDependencies": {
-    "@swc/core": "^1.7.26",
-    "@swc/helpers": "^0.5.13",
     "@types/aws-lambda": "^8.10.145",
-    "@types/jest": "^29.5.13",
-    "@types/node": "^20.16.5",
+    "@types/node": "^22.5.5",
     "@types/randombytes": "^2.0.3",
     "@types/uuid": "^9.0.8",
     "aws-cdk": "^2.159.1",
     "esbuild": "^0.19.12",
-    "jest": "^29.7.0",
-    "regenerator-runtime": "^0.14.1",
-    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.1",
     "typescript": "^5.6.2"
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.654.0",
-    "@aws-sdk/client-dynamodb": "^3.654.0",
+    "@aws-sdk/client-dynamodb": "^3.656.0",
     "@aws-sdk/client-s3": "^3.654.0",
-    "@aws-sdk/util-dynamodb": "^3.654.0",
+    "@aws-sdk/util-dynamodb": "^3.656.0",
     "aws-cdk-lib": "^2.159.1",
-    "aws-lambda": "^1.0.7",
     "constructs": "^10.3.0",
     "randombytes": "^2.1.0",
     "source-map-support": "^0.5.21",
     "uuid": "^9.0.1"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "roots": [
-      "<rootDir>/test"
-    ],
-    "testMatch": [
-      "**/*.test.ts"
-    ],
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    }
   }
 }

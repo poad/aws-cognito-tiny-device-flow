@@ -10,12 +10,8 @@
     "build": "next build",
     "start": "next start",
     "analyze": "ANALYZE=true next build",
-    "style:fix": "prettier --write src",
-    "style:check": "prettier --check src",
-    "eslint:fix": "eslint './src/**/*.{ts,tsx}' --fix",
-    "eslint:check": "eslint './src/**/*.{ts,tsx}'",
-    "lint": "pnpm run --parallel /^.*:check/",
-    "lint-fix": "pnpm run /^.*:fix/",
+    "lint-fix": "eslint './src/**/*.{ts,tsx}' --fix",
+    "lint": "eslint './src/**/*.{ts,tsx}'",
     "all": "pnpm lint-fix && pnpm build && pnpm test"
   },
   "dependencies": {

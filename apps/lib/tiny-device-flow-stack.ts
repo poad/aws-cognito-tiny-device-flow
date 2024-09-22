@@ -358,7 +358,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
           TABLE_NAME: deviceCodeTable.tableName,
           CLIENT_ID: appClient.userPoolClientId,
           EXPIRE_IN_SEC: '300',
-          VERIFICATION_URI: `${api.url!}oauth/device/activate`,
+          VERIFICATION_URI: `${api.url ?? ''}oauth/device/activate`,
         },
         role: new iam.Role(this, 'DeviceCodeEndpointExecutionRole', {
           assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),

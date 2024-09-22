@@ -27,7 +27,7 @@ export const handler = async (
           )
         )
           .map((entry) => {
-            const entity: { [key: string]: string } = {};
+            const entity: Record<string, string> = {};
             entity[entry[0]] = entry[1];
             return entity;
           })
@@ -65,7 +65,7 @@ export const handler = async (
     };
   }
 
-  if (client_id !== process.env.CLIENT_ID!) {
+  if (client_id !== (process.env.CLIENT_ID ?? '')) {
     return {
       statusCode: 400,
       body: JSON.stringify({
@@ -76,7 +76,7 @@ export const handler = async (
   }
 
   const dynamoClient = new DynamoDB({
-    region: process.env.REGION!,
+    region: process.env.REGION,
   });
 
   const query: QueryCommandInput = {
@@ -114,9 +114,9 @@ export const handler = async (
     }
 
     return {
-      id_token: item.id_token.S!,
-      access_token: item.access_token.S!,
-      token_type: item.token_type.S!,
+      id_token: item.id_token.S ?? '',
+      access_token: item.access_token.S ?? '',
+      token_type: item.token_type.S ?? '',
       expires_in:
         item.token_expire.N !== undefined
           ? Number(item.token_expire.N)

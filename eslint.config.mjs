@@ -6,6 +6,7 @@ import stylisticTs from '@stylistic/eslint-plugin-ts';
 import stylisticJsx from '@stylistic/eslint-plugin-jsx';
 import nextPlugin from '@next/eslint-plugin-next';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
+// @ts-expect-error ignore type errors
 import importPlugin from 'eslint-plugin-import';
 
 import tseslint from 'typescript-eslint';

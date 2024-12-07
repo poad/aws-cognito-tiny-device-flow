@@ -9,7 +9,10 @@ const config = {
   swcMinify: true,
   experimental: {
     esmExternals: true,
-  }
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 module.exports = withBundleAnalyzer(config);

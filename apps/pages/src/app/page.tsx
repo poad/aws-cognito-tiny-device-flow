@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import { JSX } from 'react';
 import Head from 'next/head';
 
 export default function Home(): JSX.Element {

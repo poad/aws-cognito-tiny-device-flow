@@ -6,10 +6,6 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const config = {
   output: "export",
   reactStrictMode: true,
-  swcMinify: true,
-  experimental: {
-    esmExternals: true,
-  },
   eslint: {
     ignoreDuringBuilds: true,
   },

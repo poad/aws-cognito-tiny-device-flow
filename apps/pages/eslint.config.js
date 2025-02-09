@@ -3,6 +3,8 @@
 import eslint from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
 import stylisticTs from '@stylistic/eslint-plugin-ts';
+import stylisticJsx from '@stylistic/eslint-plugin-jsx';
+import nextPlugin from '@next/eslint-plugin-next';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 // @ts-expect-error ignore type errors
 import importPlugin from 'eslint-plugin-import';
@@ -50,6 +52,8 @@ export default tseslint.config(
     plugins: {
       '@stylistic': stylistic,
       '@stylistic/ts': stylisticTs,
+      '@stylistic/jsx': stylisticJsx,
+      '@next/next': nextPlugin,
     },
     extends: [
       // @ts-expect-error ignore type error
@@ -70,8 +74,14 @@ export default tseslint.config(
       },
     },
     rules: {
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs['core-web-vitals'].rules,
+      '@next/next/no-duplicate-head': 'off',
+      '@next/next/no-img-element': 'error',
+      '@next/next/no-page-custom-font': 'off',
       '@stylistic/semi': 'error',
       '@stylistic/ts/indent': ['error', 2],
+      '@stylistic/jsx/jsx-indent': ['error', 2],
       'comma-dangle': ['error', 'always-multiline'],
       'arrow-parens': ['error', 'always'],
       quotes: ['error', 'single'],

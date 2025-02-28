@@ -24,11 +24,11 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
-    "@aws-sdk/client-cognito-identity-provider": "^3.750.0",
-    "@aws-sdk/client-dynamodb": "^3.751.0",
-    "@aws-sdk/client-s3": "^3.750.0",
-    "@aws-sdk/util-dynamodb": "^3.751.0",
-    "aws-cdk-lib": "^2.181.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.758.0",
+    "@aws-sdk/client-dynamodb": "^3.758.0",
+    "@aws-sdk/client-s3": "^3.758.0",
+    "@aws-sdk/util-dynamodb": "^3.758.0",
+    "aws-cdk-lib": "^2.181.1",
     "constructs": "^10.4.2",
     "randombytes": "^2.1.0",
     "source-map-support": "^0.5.21",

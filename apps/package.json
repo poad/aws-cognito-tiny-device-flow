@@ -14,17 +14,17 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.147",
-    "@types/node": "^22.13.8",
+    "@types/node": "^22.13.9",
     "@types/randombytes": "^2.0.3",
     "@types/uuid": "^10.0.0",
-    "aws-cdk": "^2.1001.0",
+    "aws-cdk": "^2.1002.0",
     "esbuild": "^0.25.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "@aws-sdk/client-cognito-identity-provider": "^3.758.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.760.0",
     "@aws-sdk/client-dynamodb": "^3.758.0",
     "@aws-sdk/client-s3": "^3.758.0",
     "@aws-sdk/util-dynamodb": "^3.758.0",

@@ -36,10 +36,10 @@ importers:
         specifier: ^9.22.0
         version: 9.22.0(jiti@2.4.2)
       eslint-config-next:
-        specifier: ^15.2.2
+        specifier: ^15.2.1
         version: 15.2.2(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.2)
       eslint-import-resolver-typescript:
-        specifier: ^3.8.5
+        specifier: ^3.8.3
         version: 3.8.5(eslint-plugin-import@2.31.0)(eslint@9.22.0(jiti@2.4.2))
       eslint-plugin-flowtype:
         specifier: ^8.0.3
@@ -78,8 +78,8 @@ importers:
         specifier: ^3.758.0
         version: 3.758.0(@aws-sdk/client-dynamodb@3.758.0)
       aws-cdk-lib:
-        specifier: ^2.182.0
-        version: 2.182.0(constructs@10.4.2)
+        specifier: ^2.183.0
+        version: 2.183.0(constructs@10.4.2)
       constructs:
         specifier: ^10.4.2
         version: 10.4.2
@@ -177,8 +177,8 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@aws-cdk/asset-awscli-v1@2.2.226':
-    resolution: {integrity: sha512-dlf8mTsW6ulV9pUxiYHSRHtQfZhHX1gmLEbHGE1sPI//skgkma+p5CVBeSiou9QEdcHOvOVruYzxY9OZ/GDS7g==}
+  '@aws-cdk/asset-awscli-v1@2.2.227':
+    resolution: {integrity: sha512-BAZwZGtX166K9KRYnRBbRj/fU0FY00LOnki11OsDQMfZ9H6tno+LIhv/ZY5U4LGIaI8yP881pAhbrVxpKQnYLg==}
 
   '@aws-cdk/asset-node-proxy-agent-v6@2.1.0':
     resolution: {integrity: sha512-7bY3J8GCVxLupn/kNmpPc5VJz8grx+4RKfnnJiO1LG+uxkZfANZG3RMHhE+qQxxwkyQ9/MfPtTpf748UhR425A==}
@@ -1486,8 +1486,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  aws-cdk-lib@2.182.0:
-    resolution: {integrity: sha512-emymzTJiCpPz8oF++oiFvFuLH1QZjv6NRNQGn7VuDrEewZFTM4VpiVco5NrxH+KCWnXquDBPF5sQIUo6HY7jLg==}
+  aws-cdk-lib@2.183.0:
+    resolution: {integrity: sha512-xwdDMm7qKBgN+dRjn8XxwS0YDRFM9JnUavFWM2bzaOzFeaBCiwFMrG0xLZaZs6GBImV804/jj8PnjmbOCsDZdw==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       constructs: ^10.0.0
@@ -2837,7 +2837,7 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@aws-cdk/asset-awscli-v1@2.2.226': {}
+  '@aws-cdk/asset-awscli-v1@2.2.227': {}
 
   '@aws-cdk/asset-node-proxy-agent-v6@2.1.0': {}
 
@@ -4596,9 +4596,9 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
-  aws-cdk-lib@2.182.0(constructs@10.4.2):
+  aws-cdk-lib@2.183.0(constructs@10.4.2):
     dependencies:
-      '@aws-cdk/asset-awscli-v1': 2.2.226
+      '@aws-cdk/asset-awscli-v1': 2.2.227
       '@aws-cdk/asset-node-proxy-agent-v6': 2.1.0
       '@aws-cdk/cloud-assembly-schema': 40.7.0
       constructs: 10.4.2

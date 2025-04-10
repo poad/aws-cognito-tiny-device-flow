@@ -4,10 +4,16 @@ import eslint from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
 import stylisticTs from '@stylistic/eslint-plugin-ts';
 import stylisticJsx from '@stylistic/eslint-plugin-jsx';
+import react from 'eslint-plugin-react';
+import globals from 'globals';
+
 import nextPlugin from '@next/eslint-plugin-next';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
-// @ts-expect-error ignore type errors
+import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
+// @ts-ignore
 import importPlugin from 'eslint-plugin-import';
+import flowtypePlugin from 'eslint-plugin-flowtype';
+import pluginPromise from 'eslint-plugin-promise'
 
 import tseslint from 'typescript-eslint';
 import { FlatCompat } from '@eslint/eslintrc';
@@ -26,40 +32,39 @@ export default tseslint.config(
   includeIgnoreFile(gitignorePath),
   {
     ignores: [
-      '**/*.d.ts',
-      '**/*.{js,jsx}',
-      'tsconfig.json',
-      'stories',
-      '**/*.css',
+      '*.d.ts',
+      '*.{js,jsx}',
+      'src/tsconfig.json',
+      '*.css',
       'node_modules/**/*',
-      './.next/*',
+      '.next',
       'out',
-      '.storybook',
     ],
   },
   eslint.configs.recommended,
   ...tseslint.configs.strict,
   ...tseslint.configs.stylistic,
+  ...compat.config({
+    extends: ['next/core-web-vitals'],
+  }),
+  pluginPromise.configs['flat/recommended'],
   {
-    files: ['./src/**/*.{ts,tsx}', './{lambda,bin,lib}/**/*.{ts,js,tsx,jsx}'],
-    ...importPlugin.configs.recommended,
-    ...importPlugin.configs.typescript,
+    files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
+    ...importPlugin.flatConfigs.recommended,
+    ...importPlugin.flatConfigs.typescript,
     languageOptions: {
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      globals: {
+        ...globals.browser,
+      },
       parser: tseslint.parser,
       ecmaVersion: 'latest',
       sourceType: 'module',
     },
-    plugins: {
-      '@stylistic': stylistic,
-      '@stylistic/ts': stylisticTs,
-      '@stylistic/jsx': stylisticJsx,
-      '@next/next': nextPlugin,
-    },
-    extends: [
-      // @ts-expect-error ignore type error
-      ...compat.config(reactHooksPlugin.configs.recommended),
-      // ...compat.config(jsxA11yPlugin.configs.recommended),
-    ],
     settings: {
       react: {
         version: 'detect',
@@ -69,27 +74,54 @@ export default tseslint.config(
         { name: 'Link', linkAttribute: 'to' },
         { name: 'NavLink', linkAttribute: 'to' },
       ],
+      'import/internal-regex': '^~/',
       'import/resolver': {
+        node: true,
         typescript: true,
       },
     },
+    plugins: {
+      '@stylistic': stylistic,
+      '@stylistic/ts': stylisticTs,
+      '@stylistic/jsx': stylisticJsx,
+      react,
+      'jsx-a11y': jsxA11yPlugin,
+      '@next/next': nextPlugin,
+      'flow-type': flowtypePlugin,
+      'react-hooks': reactHooksPlugin,
+    },
+    extends: [
+      // @ts-ignore
+      ...compat.config(jsxA11yPlugin.configs.recommended),
+      ...compat.config(jsxA11yPlugin.configs.recommended),
+
+      ...tseslint.configs.strict,
+      ...tseslint.configs.stylistic,
+    ],
+    // @ts-ignore
     rules: {
+      'react/jsx-uses-react': 'off',
+      'react/jsx-uses-vars': 'off',
+      'react/require-render-return': 'off',
+      'react/display-name': 'off',
+      'react/no-direct-mutation-state': 'off',
+      'react/no-string-refs': 'off',
+      'react/jsx-no-undef': 'off',
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs['core-web-vitals'].rules,
+      ...reactHooksPlugin.configs.recommended.rules,
       '@next/next/no-duplicate-head': 'off',
       '@next/next/no-img-element': 'error',
       '@next/next/no-page-custom-font': 'off',
-      '@stylistic/semi': 'error',
-      '@stylistic/ts/indent': ['error', 2],
-      '@stylistic/jsx/jsx-indent': ['error', 2],
-      'comma-dangle': ['error', 'always-multiline'],
-      'arrow-parens': ['error', 'always'],
-      quotes: ['error', 'single'],
-      'react/display-name': 'off',
       'import/namespace': 'off',
       'import/no-named-as-default': 'off',
       'import/no-named-as-default-member': 'off',
-      'react-hooks/exhaustive-deps': 'off',
+      '@stylistic/ts/indent': ['error', 2],
+      '@stylistic/jsx/jsx-indent': ['error', 2],
+      '@stylistic/semi': ['error', 'always'],
+      '@stylistic/comma-dangle': ['error', 'always-multiline'],
+      '@stylistic/arrow-parens': ['error', 'always'],
+      '@stylistic/quotes': ['error', 'single'],
     },
   },
 );

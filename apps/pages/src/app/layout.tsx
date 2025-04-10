@@ -5,7 +5,7 @@ import StyledJsxRegistry from './registry';
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <html>
+    <html lang='en'>
       <head />
       <body>
         <StyledJsxRegistry>{children}</StyledJsxRegistry>

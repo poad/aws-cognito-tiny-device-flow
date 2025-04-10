@@ -40,6 +40,7 @@ export default function Process(): JSX.Element {
 
   useEffect(() => {
     handleFragments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <main />;

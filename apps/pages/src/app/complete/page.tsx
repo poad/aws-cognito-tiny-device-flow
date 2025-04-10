@@ -1,6 +1,6 @@
 'use client';
 
-import { JSX } from "react";
+import { JSX } from 'react';
 
 export default function Home(): JSX.Element {
   return (

@@ -23,8 +23,8 @@
   "devDependencies": {
     "@next/bundle-analyzer": "^15.3.2",
     "@next/eslint-plugin-next": "^15.3.2",
-    "@tailwindcss/postcss": "^4.1.7",
-    "@types/node": "22.15.23",
+    "@tailwindcss/postcss": "^4.1.8",
+    "@types/node": "22.15.24",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
     "autoprefixer": "^10.4.21",
@@ -32,7 +32,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "globals": "^16.2.0",
     "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.7",
+    "tailwindcss": "^4.1.8",
     "typescript": "^5.8.3"
   }
 }

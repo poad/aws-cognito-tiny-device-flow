@@ -20,7 +20,7 @@
     "aws-cdk": "^2.1018.1",
     "esbuild": "^0.25.5",
     "ts-node": "^10.9.2",
-    "tsx": "^4.20.2",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   },
   "dependencies": {
@@ -28,7 +28,7 @@
     "@aws-sdk/client-dynamodb": "^3.828.0",
     "@aws-sdk/client-s3": "^3.828.0",
     "@aws-sdk/util-dynamodb": "^3.828.0",
-    "aws-cdk-lib": "^2.200.2",
+    "aws-cdk-lib": "^2.201.0",
     "constructs": "^10.4.2",
     "randombytes": "^2.1.0",
     "source-map-support": "^0.5.21",

@@ -2,9 +2,7 @@
 
 import eslint from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
-import stylisticTs from '@stylistic/eslint-plugin-ts';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
-// @ts-expect-error ignore type errors
 import importPlugin from 'eslint-plugin-import';
 
 import tseslint from 'typescript-eslint';
@@ -49,10 +47,9 @@ export default tseslint.config(
     },
     plugins: {
       '@stylistic': stylistic,
-      '@stylistic/ts': stylisticTs,
+      '@stylistic/ts': stylistic,
     },
     extends: [
-      // @ts-expect-error ignore type error
       ...compat.config(reactHooksPlugin.configs.recommended),
       // ...compat.config(jsxA11yPlugin.configs.recommended),
     ],

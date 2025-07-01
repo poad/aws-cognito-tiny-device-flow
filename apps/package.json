@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.150",
-    "@types/node": "^24.0.7",
+    "@types/node": "^24.0.8",
     "@types/randombytes": "^2.0.3",
     "@types/uuid": "^10.0.0",
     "aws-cdk": "^2.1019.2",
@@ -24,10 +24,10 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@aws-sdk/client-cognito-identity-provider": "^3.839.0",
-    "@aws-sdk/client-dynamodb": "^3.839.0",
-    "@aws-sdk/client-s3": "^3.839.0",
-    "@aws-sdk/util-dynamodb": "^3.839.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.840.0",
+    "@aws-sdk/client-dynamodb": "^3.840.0",
+    "@aws-sdk/client-s3": "^3.840.0",
+    "@aws-sdk/util-dynamodb": "^3.840.0",
     "aws-cdk-lib": "^2.202.0",
     "constructs": "^10.4.2",
     "randombytes": "^2.1.0",

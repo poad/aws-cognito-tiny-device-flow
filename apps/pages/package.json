@@ -15,14 +15,14 @@
     "all": "pnpm lint-fix && pnpm build && pnpm test"
   },
   "dependencies": {
-    "next": "^15.4.5",
+    "next": "^15.4.6",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "styled-jsx": "^5.1.7"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^15.4.5",
-    "@next/eslint-plugin-next": "^15.4.5",
+    "@next/bundle-analyzer": "^15.4.6",
+    "@next/eslint-plugin-next": "^15.4.6",
     "@tailwindcss/postcss": "^4.1.11",
     "@types/node": "24.2.0",
     "@types/react": "^19.1.9",

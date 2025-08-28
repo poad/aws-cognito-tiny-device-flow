@@ -25,7 +25,7 @@
     "@next/eslint-plugin-next": "^15.5.2",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/node": "24.3.0",
-    "@types/react": "^19.1.11",
+    "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.8",
     "autoprefixer": "^10.4.21",
     "eslint-plugin-promise": "^7.2.1",

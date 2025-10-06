@@ -29,7 +29,7 @@
     "@types/react-dom": "^19.2.0",
     "autoprefixer": "^10.4.21",
     "eslint-plugin-promise": "^7.2.1",
-    "eslint-plugin-react-hooks": "^6.1.0",
+    "eslint-plugin-react-hooks": "^6.1.1",
     "globals": "^16.4.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.14",

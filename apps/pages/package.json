@@ -15,16 +15,16 @@
     "all": "pnpm lint-fix && pnpm build && pnpm test"
   },
   "dependencies": {
-    "next": "16.0.0",
+    "next": "16.0.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "styled-jsx": "^5.1.7"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "16.0.0",
-    "@next/eslint-plugin-next": "16.0.0",
+    "@next/bundle-analyzer": "16.0.1",
+    "@next/eslint-plugin-next": "16.0.1",
     "@tailwindcss/postcss": "^4.1.16",
-    "@types/node": "24.9.1",
+    "@types/node": "24.9.2",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "autoprefixer": "^10.4.21",

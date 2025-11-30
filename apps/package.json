@@ -20,7 +20,7 @@
     "aws-cdk": "^2.1033.0",
     "esbuild": "^0.27.0",
     "ts-node": "^10.9.2",
-    "tsx": "^4.20.6",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {

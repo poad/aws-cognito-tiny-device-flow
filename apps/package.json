@@ -18,7 +18,7 @@
     "@types/randombytes": "^2.0.3",
     "@types/uuid": "^11.0.0",
     "aws-cdk": "^2.1033.0",
-    "esbuild": "^0.27.0",
+    "esbuild": "^0.27.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"

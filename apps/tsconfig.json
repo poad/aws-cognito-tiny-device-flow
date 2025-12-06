@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
   "target": "esnext",
-  "module": "esnext",
+  "module": "nodenext",
   "lib": [
     "esnext",
     "DOM"
   ],
-  "moduleResolution": "bundler",
+  "moduleResolution": "nodenext",
   "declaration": true,
   "esModuleInterop":true,
   "strict": true,

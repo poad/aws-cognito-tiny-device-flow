@@ -3,7 +3,7 @@ import { DynamoDB, ScanCommandInput } from '@aws-sdk/client-dynamodb';
 import { URLSearchParams } from 'url';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Stream } from 'stream';
-import { ErrorResponse } from '../types';
+import { ErrorResponse } from '../types/index.js';
 
 interface Environments {
   bucketName: string;

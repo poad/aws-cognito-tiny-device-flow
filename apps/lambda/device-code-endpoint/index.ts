@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import { DynamoDB, PutItemInput } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
 import { URLSearchParams } from 'url';
-import { ErrorResponse, DeviceCodeTable } from '../types';
+import { ErrorResponse, DeviceCodeTable } from '../types/index.js';
 
 interface DeviceAuthorizationResponse {
   device_code: string;

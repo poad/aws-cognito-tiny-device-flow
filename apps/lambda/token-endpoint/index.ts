@@ -1,7 +1,7 @@
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { DynamoDB, QueryCommandInput } from '@aws-sdk/client-dynamodb';
 import { URLSearchParams } from 'url';
-import { ErrorResponse } from '../types';
+import { ErrorResponse } from '../types/index.js';
 
 interface DeviceAccessTokenResponse {
   id_token: string;

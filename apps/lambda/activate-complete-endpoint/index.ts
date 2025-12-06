@@ -4,7 +4,7 @@ import { marshall } from '@aws-sdk/util-dynamodb';
 import { URLSearchParams } from 'url';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Stream } from 'stream';
-import { DeviceCodeTable, ErrorResponse } from '../types';
+import { DeviceCodeTable, ErrorResponse } from '../types/index.js';
 
 interface Environments {
   bucketName: string;

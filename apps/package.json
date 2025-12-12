@@ -14,10 +14,10 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.159",
-    "@types/node": "^25.0.0",
+    "@types/node": "^25.0.1",
     "@types/randombytes": "^2.0.3",
     "@types/uuid": "^11.0.0",
-    "aws-cdk": "^2.1033.0",
+    "aws-cdk": "^2.1034.0",
     "esbuild": "^0.27.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
@@ -29,7 +29,7 @@
     "@aws-sdk/client-s3": "^3.948.0",
     "@aws-sdk/util-dynamodb": "^3.948.0",
     "aws-cdk-lib": "^2.232.1",
-    "constructs": "^10.4.3",
+    "constructs": "^10.4.4",
     "randombytes": "^2.1.0",
     "source-map-support": "^0.5.21",
     "uuid": "^13.0.0"

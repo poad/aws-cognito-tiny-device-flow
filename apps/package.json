@@ -26,7 +26,7 @@
     "@aws-sdk/client-dynamodb": "^3.965.0",
     "@aws-sdk/client-s3": "^3.965.0",
     "@aws-sdk/util-dynamodb": "^3.965.0",
-    "aws-cdk-lib": "^2.233.0",
+    "aws-cdk-lib": "^2.234.0",
     "constructs": "^10.4.4",
     "randombytes": "^2.1.0",
     "source-map-support": "^0.5.21",

@@ -13,7 +13,9 @@ updates:
       - poad
 
   - package-ecosystem: npm
-    directory: '/apps/'
+    directories:
+      - '/apps/'
+      - '/apps/pages/'
     schedule:
       interval: daily
       timezone: Asia/Tokyo
@@ -24,22 +26,6 @@ updates:
     assignees:
       - poad
     groups:
-      api:
-        patterns:
-          - "*"
-
-  - package-ecosystem: npm
-    directory: '/apps/pages/'
-    schedule:
-      interval: daily
-      timezone: Asia/Tokyo
-      time: "12:00"
-    allow:
-      - dependency-type: all
-    rebase-strategy: auto
-    assignees:
-      - poad
-    groups:
-      front:
+      npm:
         patterns:
           - "*"

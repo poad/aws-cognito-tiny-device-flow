@@ -1,5 +1,3 @@
-// @ts-check
-
 import { defineConfig } from 'eslint/config';
 import eslint from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
@@ -8,9 +6,10 @@ import globals from 'globals';
 
 import nextPlugin from '@next/eslint-plugin-next';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
+// @ts-ignore
 import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
 import importPlugin from 'eslint-plugin-import';
-import flowtypePlugin from 'eslint-plugin-flowtype';
+// @ts-ignore
 import pluginPromise from 'eslint-plugin-promise'
 
 import tseslint from 'typescript-eslint';
@@ -42,7 +41,6 @@ export default defineConfig(
   eslint.configs.recommended,
   ...tseslint.configs.strict,
   ...tseslint.configs.stylistic,
-  // @ts-ignore
   pluginPromise.configs['flat/recommended'],
   {
     files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
@@ -81,7 +79,6 @@ export default defineConfig(
       react,
       'jsx-a11y': jsxA11yPlugin,
       '@next/next': nextPlugin,
-      'flow-type': flowtypePlugin,
       'react-hooks': reactHooksPlugin,
     },
     extends: [

@@ -13,18 +13,18 @@
     "lint": "eslint './{lambda,bin,lib}/**/*.{ts,js,tsx,jsx}'"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.160",
-    "@types/node": "^25.3.1",
+    "@types/aws-lambda": "^8.10.161",
+    "@types/node": "^25.3.2",
     "@types/randombytes": "^2.0.3",
-    "aws-cdk": "^2.1107.0",
+    "aws-cdk": "^2.1108.0",
     "esbuild": "^0.27.3",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@aws-sdk/client-cognito-identity-provider": "^3.998.0",
-    "@aws-sdk/client-dynamodb": "^3.998.0",
-    "@aws-sdk/client-s3": "^3.998.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.999.0",
+    "@aws-sdk/client-dynamodb": "^3.999.0",
+    "@aws-sdk/client-s3": "^3.999.0",
     "@aws-sdk/util-dynamodb": "^3.996.1",
     "aws-cdk-lib": "^2.240.0",
     "constructs": "^10.5.1",

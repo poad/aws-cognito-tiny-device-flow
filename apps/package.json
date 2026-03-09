@@ -16,7 +16,7 @@
     "@types/aws-lambda": "^8.10.161",
     "@types/node": "^25.3.5",
     "@types/randombytes": "^2.0.3",
-    "aws-cdk": "^2.1109.0",
+    "aws-cdk": "^2.1110.0",
     "esbuild": "^0.27.3",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"

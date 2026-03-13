@@ -22,7 +22,7 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
-    "pnpm": "^10.32.0",
+    "pnpm": "^10.32.1",
     "typescript-eslint": "^8.57.0"
   },
   "engines": {
@@ -31,5 +31,5 @@
     "pnpm": ">=8.7.1",
     "node": ">=18.0.0"
   },
-  "packageManager": "pnpm@10.32.0"
+  "packageManager": "pnpm@10.32.1"
 }

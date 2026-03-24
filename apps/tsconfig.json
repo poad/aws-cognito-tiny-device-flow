@@ -21,7 +21,10 @@
   "inlineSourceMap": true,
   "inlineSources": true,
   "experimentalDecorators": true,
-  "strictPropertyInitialization": false
+  "strictPropertyInitialization": false,
+  "types": [
+    "node"
+  ]
 },
 "exclude": [
     "node_modules",

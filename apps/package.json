@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.161",
-    "@types/node": "^25.9.1",
+    "@types/node": "^25.9.0",
     "@types/randombytes": "^2.0.3",
     "aws-cdk": "^2.1124.1",
     "esbuild": "^0.28.0",

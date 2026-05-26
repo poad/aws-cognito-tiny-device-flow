@@ -2,6 +2,11 @@ packages:
   - ./apps
   - ./apps/pages
 
+allowBuilds:
+  esbuild: false
+  sharp: false
+  unrs-resolver: false
+
 overrides:
   '@eslint/eslintrc>ajv': ^6.12.4
   '@eslint/js': '>=10'

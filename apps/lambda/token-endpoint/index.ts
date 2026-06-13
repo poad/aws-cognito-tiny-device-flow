@@ -1,7 +1,7 @@
-import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
-import { DynamoDB, QueryCommandInput } from '@aws-sdk/client-dynamodb';
 import { URLSearchParams } from 'url';
 import { ErrorResponse } from '../types/index.js';
+import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
+import { DynamoDB, QueryCommandInput } from '@aws-sdk/client-dynamodb';
 
 interface DeviceAccessTokenResponse {
   id_token: string;
@@ -11,7 +11,7 @@ interface DeviceAccessTokenResponse {
 }
 
 export const handler = async (
-  event: APIGatewayProxyEventV2
+  event: APIGatewayProxyEventV2,
 ): Promise<
   APIGatewayProxyResultV2<DeviceAccessTokenResponse | ErrorResponse>
 > => {
@@ -20,22 +20,22 @@ export const handler = async (
   const body =
     event.body !== undefined
       ? (Array.from(
-          new URLSearchParams(
-            event.isBase64Encoded
-              ? Buffer.from(event.body, 'base64').toString()
-              : event.body
-          )
-        )
-          .map((entry) => {
-            const entity: Record<string, string> = {};
-            entity[entry[0]] = entry[1];
-            return entity;
-          })
-          .reduce((cur, acc) => Object.assign(acc, cur)) as {
-          grant_type?: string;
-          device_code?: string;
-          client_id?: string;
+        new URLSearchParams(
+          event.isBase64Encoded
+            ? Buffer.from(event.body, 'base64').toString()
+            : event.body,
+        ),
+      )
+        .map((entry) => {
+          const entity: Record<string, string> = {};
+          entity[entry[0]] = entry[1];
+          return entity;
         })
+        .reduce((cur, acc) => Object.assign(acc, cur)) as {
+        grant_type?: string;
+        device_code?: string;
+        client_id?: string;
+      })
       : undefined;
 
   const { grant_type, device_code, client_id } = body || {};
@@ -50,7 +50,7 @@ export const handler = async (
       body: JSON.stringify({
         error: 'invalid_request',
         error_description:
-          "The request body must contain the following parameter: 'client_id'.",
+          'The request body must contain the following parameter: \'client_id\'.',
       } as ErrorResponse),
     };
   }

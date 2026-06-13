@@ -1,6 +1,6 @@
+import { Stream } from 'stream';
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { Stream } from 'stream';
 
 interface Environments {
   bucketName: string;
@@ -18,13 +18,13 @@ const environments: Environments = {
 
 const downloadObject = async (
   s3: S3Client,
-  path: string
+  path: string,
 ): Promise<
   | {
-      statusCode: number;
-      contentType: string;
-      body?: string;
-    }
+    statusCode: number;
+    contentType: string;
+    body?: string;
+  }
   | undefined
 > => {
   const key = `${environments.pathPrefix}/${path}`;
@@ -35,7 +35,7 @@ const downloadObject = async (
     new GetObjectCommand({
       Bucket: environments.bucketName,
       Key: key,
-    })
+    }),
   );
   if (resp.Body === undefined) {
     console.warn('not found');
@@ -66,7 +66,7 @@ const MIME_TYPES = {
 
 const mimeType = (path: string | undefined, s3Mime: string): string => {
   const resolved = Object.entries(MIME_TYPES).find((entry) =>
-    path?.endsWith(entry[0]) ? entry : undefined
+    path?.endsWith(entry[0]) ? entry : undefined,
   );
 
   // console.log(resolved ? resolved[1] : s3Mime);
@@ -75,7 +75,7 @@ const mimeType = (path: string | undefined, s3Mime: string): string => {
 };
 
 export const handler = async (
-  event: APIGatewayProxyEventV2
+  event: APIGatewayProxyEventV2,
 ): Promise<APIGatewayProxyResultV2> => {
   // console.log(JSON.stringify(event));
 
@@ -92,17 +92,17 @@ export const handler = async (
 
   return content !== undefined
     ? {
-        statusCode: 200,
-        headers: {
-          'Content-Type': mimeType(proxy, content?.contentType ?? ''),
-        },
-        body: content?.body,
-      }
+      statusCode: 200,
+      headers: {
+        'Content-Type': mimeType(proxy, content?.contentType ?? ''),
+      },
+      body: content?.body,
+    }
     : {
-        statusCode: 404,
-        headers: { 'Content-Type': notFound?.contentType ?? '' },
-        body: notFound?.body,
-      };
+      statusCode: 404,
+      headers: { 'Content-Type': notFound?.contentType ?? '' },
+      body: notFound?.body,
+    };
 };
 
 export default handler;

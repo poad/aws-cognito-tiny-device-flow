@@ -1,10 +1,10 @@
+import { URLSearchParams } from 'url';
+import { Stream } from 'stream';
+import { DeviceCodeTable, ErrorResponse } from '../types/index.js';
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { DynamoDB, ScanCommandInput } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
-import { URLSearchParams } from 'url';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { Stream } from 'stream';
-import { DeviceCodeTable, ErrorResponse } from '../types/index.js';
 
 interface Environments {
   bucketName: string;
@@ -81,13 +81,13 @@ const authorize = async (param: {
 
 const downloadObject = async (
   s3: S3Client,
-  path: string
+  path: string,
 ): Promise<
   | {
-      statusCode: number;
-      contentType: string;
-      body?: string;
-    }
+    statusCode: number;
+    contentType: string;
+    body?: string;
+  }
   | undefined
 > => {
   const key = `${environments.pathPrefix}/${path}`;
@@ -97,7 +97,7 @@ const downloadObject = async (
     new GetObjectCommand({
       Bucket: environments.bucketName,
       Key: key,
-    })
+    }),
   );
   if (resp.Body === undefined) {
     console.warn('not found');
@@ -120,7 +120,7 @@ const downloadObject = async (
 };
 
 export const handler = async (
-  event: APIGatewayProxyEventV2
+  event: APIGatewayProxyEventV2,
 ): Promise<APIGatewayProxyResultV2> => {
   // console.log(JSON.stringify(event));
 
@@ -136,19 +136,19 @@ export const handler = async (
 
   const state = event.queryStringParameters?.state
     ? (Array.from(
-        new URLSearchParams(
-          Buffer.from(event.queryStringParameters?.state, 'base64').toString()
-        )
-      )
-        .map((entry) => {
-          const entity: Record<string, string> = {};
-          const key = entry[0];
-          entity[key] = entry[1];
-          return entity;
-        })
-        .reduce((cur, acc) => Object.assign(acc, cur)) as {
-        user_code?: string;
+      new URLSearchParams(
+        Buffer.from(event.queryStringParameters?.state, 'base64').toString(),
+      ),
+    )
+      .map((entry) => {
+        const entity: Record<string, string> = {};
+        const key = entry[0];
+        entity[key] = entry[1];
+        return entity;
       })
+      .reduce((cur, acc) => Object.assign(acc, cur)) as {
+      user_code?: string;
+    })
     : undefined;
 
   const code = event.queryStringParameters?.code;
@@ -203,16 +203,16 @@ export const handler = async (
     const token =
       environments.responseType === 'code' && code
         ? await authorize({
-            domain: environments.domain,
-            clientId: environments.clientId,
-            redirectUri: environments.redirectUri,
-            code,
-          })
+          domain: environments.domain,
+          clientId: environments.clientId,
+          redirectUri: environments.redirectUri,
+          code,
+        })
         : {
-            idToken,
-            accessToken,
-            expiresIn: Number(expiresIn ?? '0'),
-          };
+          idToken,
+          accessToken,
+          expiresIn: Number(expiresIn ?? '0'),
+        };
 
     const { device_code, expire } = result.Items[0];
 

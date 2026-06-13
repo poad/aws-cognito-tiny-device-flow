@@ -1,11 +1,11 @@
+import crypto from 'crypto';
+import { URLSearchParams } from 'url';
+import { ErrorResponse, DeviceCodeTable } from '../types/index.js';
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import randomBytes from 'randombytes';
 import { v4 as uuidv4 } from 'uuid';
-import crypto from 'crypto';
 import { DynamoDB, PutItemInput } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
-import { URLSearchParams } from 'url';
-import { ErrorResponse, DeviceCodeTable } from '../types/index.js';
 
 interface DeviceAuthorizationResponse {
   device_code: string;
@@ -18,7 +18,7 @@ interface DeviceAuthorizationResponse {
 }
 
 export const handler = async (
-  event: APIGatewayProxyEventV2
+  event: APIGatewayProxyEventV2,
 ): Promise<
   APIGatewayProxyResultV2<DeviceAuthorizationResponse | ErrorResponse>
 > => {
@@ -27,21 +27,21 @@ export const handler = async (
   const body =
     event.body !== undefined
       ? (Array.from(
-          new URLSearchParams(
-            event.isBase64Encoded
-              ? Buffer.from(event.body, 'base64').toString()
-              : event.body
-          )
-        )
-          .map((entry) => {
-            const entity: Record<string, string> = {};
-            entity[entry[0]] = entry[1];
-            return entity;
-          })
-          .reduce((cur, acc) => Object.assign(acc, cur)) as {
-          client_id?: string;
-          scope?: string;
+        new URLSearchParams(
+          event.isBase64Encoded
+            ? Buffer.from(event.body, 'base64').toString()
+            : event.body,
+        ),
+      )
+        .map((entry) => {
+          const entity: Record<string, string> = {};
+          entity[entry[0]] = entry[1];
+          return entity;
         })
+        .reduce((cur, acc) => Object.assign(acc, cur)) as {
+        client_id?: string;
+        scope?: string;
+      })
       : undefined;
   if (body === undefined || body.client_id === undefined) {
     return {
@@ -49,7 +49,7 @@ export const handler = async (
       body: JSON.stringify({
         error: 'invalid_request',
         error_description:
-          "The request body must contain the following parameter: 'client_id'.",
+          'The request body must contain the following parameter: \'client_id\'.',
       } as ErrorResponse),
     };
   }

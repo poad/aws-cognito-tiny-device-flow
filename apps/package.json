@@ -7,19 +7,28 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "jest",
     "cdk": "cdk",
-    "lint-fix": "eslint './{lambda,bin,lib}/**/*.{ts,js,tsx,jsx}' --fix",
-    "lint": "eslint './{lambda,bin,lib}/**/*.{ts,js,tsx,jsx}'"
+    "lint-fix": "eslint --fix",
+    "lint": "eslint"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.5",
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@types/aws-lambda": "^8.10.161",
     "@types/node": "^25.9.2",
     "@types/randombytes": "^2.0.3",
     "aws-cdk": "^2.1126.0",
-    "esbuild": "^0.28.0",
+    "esbuild": "^0.28.1",
+    "eslint": "^10.4.1",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import-x": "^4.16.2",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "tsx": "^4.22.4",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.60.1"
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.1063.0",

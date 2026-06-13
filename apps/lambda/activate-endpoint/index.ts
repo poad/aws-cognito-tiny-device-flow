@@ -1,9 +1,9 @@
-import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
-import { DynamoDB, ScanCommandInput } from '@aws-sdk/client-dynamodb';
 import { URLSearchParams } from 'url';
-import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Stream } from 'stream';
 import { ErrorResponse } from '../types/index.js';
+import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
+import { DynamoDB, ScanCommandInput } from '@aws-sdk/client-dynamodb';
+import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 interface Environments {
   bucketName: string;
@@ -35,13 +35,13 @@ const environments: Environments = {
 
 const downloadObject = async (
   s3: S3Client,
-  path: string
+  path: string,
 ): Promise<
   | {
-      statusCode: number;
-      contentType: string;
-      body?: string;
-    }
+    statusCode: number;
+    contentType: string;
+    body?: string;
+  }
   | undefined
 > => {
   const key = `${environments.pathPrefix}/${path}`;
@@ -52,7 +52,7 @@ const downloadObject = async (
     new GetObjectCommand({
       Bucket: environments.bucketName,
       Key: key,
-    })
+    }),
   );
   if (resp.Body === undefined) {
     console.warn('not found');
@@ -75,7 +75,7 @@ const downloadObject = async (
 };
 
 export const handler = async (
-  event: APIGatewayProxyEventV2
+  event: APIGatewayProxyEventV2,
 ): Promise<APIGatewayProxyResultV2> => {
   // console.log(JSON.stringify(event));
 
@@ -92,21 +92,21 @@ export const handler = async (
   const body =
     event.body !== undefined
       ? (Array.from(
-          new URLSearchParams(
-            event.isBase64Encoded
-              ? Buffer.from(event.body, 'base64').toString()
-              : event.body
-          )
-        )
-          .map((entry) => {
-            const entity: Record<string, string> = {};
-            const key = entry[0];
-            entity[key] = entry[1];
-            return entity;
-          })
-          .reduce((cur, acc) => Object.assign(acc, cur)) as {
-          user_code?: string;
+        new URLSearchParams(
+          event.isBase64Encoded
+            ? Buffer.from(event.body, 'base64').toString()
+            : event.body,
+        ),
+      )
+        .map((entry) => {
+          const entity: Record<string, string> = {};
+          const key = entry[0];
+          entity[key] = entry[1];
+          return entity;
         })
+        .reduce((cur, acc) => Object.assign(acc, cur)) as {
+        user_code?: string;
+      })
       : undefined;
 
   const userCode = body?.user_code;

@@ -1,6 +1,6 @@
 'use client';
 
-import { JSX, useEffect } from 'react';
+import { JSX } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Process(): JSX.Element {
@@ -38,10 +38,7 @@ export default function Process(): JSX.Element {
     return router.push('/oauth/device/activate');
   };
 
-  useEffect(() => {
-    handleFragments();
-     
-  }, []);
+  handleFragments();
 
   return <main />;
 }

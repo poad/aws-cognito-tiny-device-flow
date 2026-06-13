@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-import * as cdk from 'aws-cdk-lib';
 import { TinyDeviceFlowStack } from '../lib/tiny-device-flow-stack.js';
 import { nextJsExport } from '../lib/process/setup.js';
+import * as cdk from 'aws-cdk-lib';
 
 nextJsExport();
 

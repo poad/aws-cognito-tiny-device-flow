@@ -10,8 +10,8 @@
     "build": "next build",
     "start": "next start",
     "analyze": "ANALYZE=true next build",
-    "lint-fix": "eslint './src/**/*.{ts,tsx}' --fix",
-    "lint": "eslint './src/**/*.{ts,tsx}'",
+    "lint-fix": "eslint --fix",
+    "lint": "eslint",
     "all": "pnpm lint-fix && pnpm build && pnpm test"
   },
   "dependencies": {

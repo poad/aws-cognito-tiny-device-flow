@@ -1,3 +1,4 @@
+import assert from 'node:assert';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
@@ -9,7 +10,6 @@ import * as apigatewayv2 from 'aws-cdk-lib/aws-apigatewayv2';
 import * as integrations from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
-import assert from 'node:assert';
 import { Construct } from 'constructs';
 
 export interface TinyDeviceFlowStackStackProps extends cdk.StackProps {
@@ -33,7 +33,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
   constructor(
     scope: Construct,
     id: string,
-    props: TinyDeviceFlowStackStackProps
+    props: TinyDeviceFlowStackStackProps,
   ) {
     super(scope, id, props);
 
@@ -133,7 +133,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
               'cognito-identity.amazonaws.com:amr': 'unauthenticated',
             },
           },
-          'sts:AssumeRoleWithWebIdentity'
+          'sts:AssumeRoleWithWebIdentity',
         ),
         inlinePolicies: {
           'allow-assume-role': new iam.PolicyDocument({
@@ -151,7 +151,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
             ],
           }),
         },
-      }
+      },
     );
 
     const userAuthenticatedRole = new iam.Role(
@@ -169,7 +169,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
               'cognito-identity.amazonaws.com:amr': 'authenticated',
             },
           },
-          'sts:AssumeRoleWithWebIdentity'
+          'sts:AssumeRoleWithWebIdentity',
         ),
         maxSessionDuration: cdk.Duration.hours(12),
         inlinePolicies: {
@@ -188,7 +188,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
             ],
           }),
         },
-      }
+      },
     );
 
     new cognito.CfnIdentityPoolRoleAttachment(
@@ -200,7 +200,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
           authenticated: userAuthenticatedRole.roleArn,
           unauthenticated: userUnauthenticatedRole.roleArn,
         },
-      }
+      },
     );
 
     const deviceCodeTable = new dynamodb.Table(this, 'DeveiceCodeTable', {
@@ -322,7 +322,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
             }),
           },
         }),
-      }
+      },
     );
 
     const deviceCodeEndpointFnName = `${props.name}-device-code-endpoint`;
@@ -381,7 +381,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
             }),
           },
         }),
-      }
+      },
     );
 
     const tokenEndpointFnName = `${props.name}-token-endpoint`;
@@ -438,7 +438,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
             }),
           },
         }),
-      }
+      },
     );
 
     const { responseType, identityProvider, scopes } = props;
@@ -450,7 +450,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       .map((scope) => scope[0]);
     assert(
       availableScopes.length > 0,
-      'The scopes must have at least one true entry.'
+      'The scopes must have at least one true entry.',
     );
 
     const scopeParam = Object.entries(scopes)
@@ -554,7 +554,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
             }),
           },
         }),
-      }
+      },
     );
 
     const activateCompleteEndpointFnName = `${props.name}-activate-complete-endpoint`;
@@ -648,9 +648,9 @@ export class TinyDeviceFlowStack extends cdk.Stack {
                 ],
               }),
             },
-          }
+          },
         ),
-      }
+      },
     );
 
     [
@@ -665,7 +665,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       methods: [apigatewayv2.HttpMethod.GET],
       integration: new integrations.HttpLambdaIntegration(
         'proxy-handler',
-        resourceEndpointFn
+        resourceEndpointFn,
       ),
     });
 
@@ -674,7 +674,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       methods: [apigatewayv2.HttpMethod.POST],
       integration: new integrations.HttpLambdaIntegration(
         'code-handler',
-        deviceCodeEndpointFn
+        deviceCodeEndpointFn,
       ),
     });
 
@@ -683,7 +683,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       methods: [apigatewayv2.HttpMethod.POST],
       integration: new integrations.HttpLambdaIntegration(
         'token-handler',
-        tokenEndpointFn
+        tokenEndpointFn,
       ),
     });
 
@@ -692,7 +692,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       methods: [apigatewayv2.HttpMethod.GET, apigatewayv2.HttpMethod.POST],
       integration: new integrations.HttpLambdaIntegration(
         'activate-handler',
-        activateEndpointFn
+        activateEndpointFn,
       ),
     });
     api.addRoutes({
@@ -700,7 +700,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       methods: [apigatewayv2.HttpMethod.GET, apigatewayv2.HttpMethod.POST],
       integration: new integrations.HttpLambdaIntegration(
         'activate-proxy-handler',
-        activateEndpointFn
+        activateEndpointFn,
       ),
     });
 
@@ -709,7 +709,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       methods: [apigatewayv2.HttpMethod.GET],
       integration: new integrations.HttpLambdaIntegration(
         'complete-handler',
-        activateCompleteEndpointFn
+        activateCompleteEndpointFn,
       ),
     });
     api.addRoutes({
@@ -717,7 +717,7 @@ export class TinyDeviceFlowStack extends cdk.Stack {
       methods: [apigatewayv2.HttpMethod.GET],
       integration: new integrations.HttpLambdaIntegration(
         'complete-proxy-handler',
-        activateCompleteEndpointFn
+        activateCompleteEndpointFn,
       ),
     });
   }

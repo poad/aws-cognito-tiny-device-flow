@@ -15,7 +15,7 @@
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "@types/aws-lambda": "^8.10.161",
+    "@types/aws-lambda": "^8.10.162",
     "@types/node": "^25.9.2",
     "@types/randombytes": "^2.0.3",
     "aws-cdk": "^2.1126.0",

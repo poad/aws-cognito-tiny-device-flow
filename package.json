@@ -14,14 +14,14 @@
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "eslint": "^10.4.1",
-    "eslint-config-next": "^16.2.7",
+    "eslint": "^10.5.0",
+    "eslint-config-next": "^16.2.9",
     "eslint-import-resolver-typescript": "^4.4.5",
-    "eslint-plugin-import-x": "^4.16.2",
+    "eslint-plugin-import-x": "^4.17.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "typescript-eslint": "^8.60.1"
+    "typescript-eslint": "^8.62.0"
   },
   "devEngines": {
     "packageManager": {
@@ -35,7 +35,7 @@
     "yarn": "use pnpm please!",
     "runtime": {
       "name": "node",
-      "version": "^24.16.0",
+      "version": "^24.18.0",
       "onFail": "download"
     }
   },

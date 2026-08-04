@@ -14,8 +14,8 @@
     "@eslint/eslintrc": "^3.3.6",
     "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "eslint": "^10.7.0",
-    "eslint-config-next": "^16.2.11",
+    "eslint": "^10.8.0",
+    "eslint-config-next": "^16.3.0",
     "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-import-x": "^4.17.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -26,18 +26,17 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "^11.5.1",
+      "version": "^11.20.0",
+      "onFail": "download"
+    },
+    "runtime": {
+      "name": "node",
+      "version": "^24.19.0",
       "onFail": "download"
     }
   },
   "engines": {
     "npm": "use pnpm please!",
-    "yarn": "use pnpm please!",
-    "runtime": {
-      "name": "node",
-      "version": "^24.18.1",
-      "onFail": "download"
-    }
-  },
-  "dependencies": {}
+    "yarn": "use pnpm please!"
+  }
 }

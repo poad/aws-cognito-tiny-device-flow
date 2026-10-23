@@ -15,7 +15,7 @@
     "all": "pnpm lint-fix && pnpm build && pnpm test"
   },
   "dependencies": {
-    "next": "^16.2.12",
+    "next": "^16.4.3",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "styled-jsx": "^5.1.7"
@@ -27,11 +27,11 @@
     "@types/node": "25.9.1",
     "@types/react": "19.2.16",
     "@types/react-dom": "19.2.3",
-    "autoprefixer": "^10.5.4",
+    "autoprefixer": "^10.6.1",
     "eslint-plugin-promise": "^7.3.0",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "globals": "^17.8.0",
-    "postcss": "^8.5.24",
+    "globals": "^17.13.0",
+    "postcss": "^8.5.30",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3"
   }
